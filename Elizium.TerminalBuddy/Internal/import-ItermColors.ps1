@@ -35,7 +35,6 @@
 }
 
 [System.Collections.Hashtable]$ComponentNamingScheme = @{
-  "ALPHA_C" = "Alpha Component";
   "RED_C"   = "Red Component";
   "GREEN_C" = "Green Component";
   "BLUE_C"  = "Blue Component";
@@ -71,11 +70,6 @@ function import-ItermColors {
     [boolean]$Trigger
   )
 
-  <#
-      "name": "Frost",
-      "foreground": "#000000",
-      "background": "#FFFFFF",
-  #>
   function handleColourComponents {
     [OutputType([System.Collections.Hashtable])]
     [CmdletBinding()] # SupportsShouldProcess, ConfirmImpact = 'Medium'
@@ -111,8 +105,7 @@ function import-ItermColors {
 
     return $colourComponents;
   } # handleColourComponents
-
-  function toRGBa {
+  function toRGB {
     [OutputType([string])]
     param(
       [Parameter()]
@@ -125,27 +118,22 @@ function import-ItermColors {
     [int]$R = $Components[$NamingScheme["RED_C"]];
     [int]$G = $Components[$NamingScheme["GREEN_C"]];
     [int]$B = $Components[$NamingScheme["BLUE_C"]];
-    if ($Components.ContainsKey($NamingScheme["ALPHA_C"])) {
-      [int]$A = [int]$B = $Components[$NamingScheme["ALPHA_C"]];
-      return "#{0:X2}{1:X2}{2:X2}{3:X2}" -f $R, $G, $B, $A;
-    } else {
-      return "#{0:X2}{1:X2}{2:X2}" -f $R, $G, $B;
-    }
-  } # toRGBa
 
-  [string]$randomValue = "{THIS IS GOING TO BE SOME JSON, $Index, $Trigger}";
+    # Terminal doesn't support Alpha values so let's ignore the Alpha component
+    #
+    return "#{0:X2}{1:X2}{2:X2}" -f $R, $G, $B;
+  } # toRGB
 
-  [System.Collections.Hashtable]$terminalThemes = @{};
-  if ($passthru.ContainsKey("ACCUMULATOR")) {
-    $terminalThemes = $passthru["ACCUMULATOR"];
-  } else {
-    $passthru["ACCUMULATOR"] = $terminalThemes;
-  }
-  $terminalThemes[$Underscore.Name] = $randomValue;
+  function buildSchemeJsonFromDocument {
+    [OutputType([string])]
+    param(
+      [Parameter()]
+      [string]$ThemeName,
 
-  [System.Xml.XmlDocument]$document = [xml]@(Get-Content -Path $Underscore.Fullname);
+      [Parameter()]
+      [System.Xml.XmlDocument]$XmlDocument
+    )
 
-  if ($document) {
     # Get the top level dictionary (/dict)
     #
     $colourKeys = Select-Xml -Xml $document -XPath '/plist/dict/key';
@@ -153,18 +141,49 @@ function import-ItermColors {
 
     [int]$colourIndex = 0;
     if ($colourKeys.Count -eq $colourDict.Count) {
+      # https://powershellexplained.com/2016-10-28-powershell-everything-you-wanted-to-know-about-pscustomobject/
+      #
+      [PSCustomObject]$colourScheme = [PSCustomObject]@{
+        name = $Underscore.Name
+      }
+
       foreach ($k in $colourKeys) {
         $colourDetails = $colourDict[$colourIndex];
         [string]$colourName = $k.Node.InnerText;
         
         # https://vexx32.github.io/2018/11/22/Implementing-ShouldProcess/
         [System.Collections.Hashtable]$kols = handleColourComponents -AnsiColour $k -ColourDictionary $colourDetails;
-        [string]$colourHash = toRGBa -Components $kols;
-        Write-Host "===> Importing colour: $colourName, KEY-TYPE: $($k.GetType()), Colour Hash: $colourHash";
+        [string]$colourHash = toRGB -Components $kols;
         $colourIndex++;
+
+        if ($ItermTerminalColourMap.ContainsKey($colourName)) {
+          $colourScheme | Add-Member -MemberType 'NoteProperty' `
+            -Name $ItermTerminalColourMap[$colourName] -Value "$colourHash";
+        }
+        else {
+          Write-Warning "Skipping un-mapped colour: $colourName";
+        }
       }
+
+      [string]$jsonColourScheme = ConvertTo-Json -InputObject $colourScheme;
+
+      Write-Host "$jsonColourScheme";
     }
+  } # buildSchemeJsonFromDocument
+
+  [System.Collections.Hashtable]$terminalThemes = @{};
+  if ($passthru.ContainsKey("ACCUMULATOR")) {
+    $terminalThemes = $passthru["ACCUMULATOR"];
+  } else {
+    $passthru["ACCUMULATOR"] = $terminalThemes;
+  }
+  
+  [System.Xml.XmlDocument]$document = [xml]@(Get-Content -Path $Underscore.Fullname);
+
+  if ($document) {
+    [string]$terminalTheme = buildSchemeJsonFromDocument -ThemeName $Underscore.Name -XmlDocument $document;
+    $terminalThemes[$Underscore.Name] = $terminalTheme;
   }
 
   return @{}
-}
+} # import-ItermColors
