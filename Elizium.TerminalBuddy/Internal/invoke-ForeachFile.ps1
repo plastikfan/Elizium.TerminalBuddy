@@ -136,9 +136,6 @@ function invoke-ForeachFile {
   #   $parameters['LiteralPath'] = $LiteralPath;
   # }
 
-  Write-Host "DEBUG (invoke-ForeachFile): Filter: $Filter";
-  Write-Host "DEBUG (invoke-ForeachFile): Path: $Path";
-
   & 'Get-ChildItem' @parameters | get-SortedFilesNatural | Where-Object {
     $Condition.Invoke($_);
   } | ForEach-Object {
@@ -148,33 +145,19 @@ function invoke-ForeachFile {
       Write-Verbose $eachItemLine -ForegroundColor $LineColour;
     }
 
-    [string]$name = $_.Name;
-
-    if ($isVerbose) {
-      Write-PairInColour @( ('>>> Original file name', $GeneralMessageDescColour), `
-        ($name, $OriginalItemColour) );
-    }
-
     # Do the invoke
     #
-    Write-Host "@@@ invoke-ForeachFile is about to invoke file: '$($_.Name)', index: '$index'"
     $result = $Body.Invoke($_, $index, $PassThru, $trigger);
 
-    if ($PassThru.ContainsKey('ACCUMULATOR')) {
-      [System.Collections.Hashtable]$accumulator = $PassThru['ACCUMULATOR'];
-      Write-Host "DEBUG: invoke-ForeachFile found ACCUMULATOR with $($accumulator.Count) entries";
-    } else {
-      Write-Host "DEBUG: invoke-ForeachFile could not find ACCUMULATOR";
-    }
+    # if ($PassThru.ContainsKey('ACCUMULATOR')) {
+    #   [System.Collections.Hashtable]$accumulator = $PassThru['ACCUMULATOR'];
+    #   Write-Host "DEBUG: invoke-ForeachFile found ACCUMULATOR with $($accumulator.Count) entries";
+    # } else {
+    #   Write-Host "DEBUG: invoke-ForeachFile could not find ACCUMULATOR";
+    # }
     # Handle the result
     #
     if ($result) {
-      # if ($isVerbose) {
-
-      #   Write-PairInColour @( ($result.Message, $GeneralMessageDescColour), `
-      #     ($result.Product, $result.Colour) );
-      # }
-
       if ($result.Contains('Trigger') -and $result.Trigger) {
         $trigger = $true;
       }
@@ -182,36 +165,10 @@ function invoke-ForeachFile {
       if ($result.Contains('Break') -and $result.Break) {
         break;
       }
-
-      # if (Get-HasProperty($result, 'Trigger')) {
-      #   if ($result.Trigger) {
-      #     $trigger = $true;
-      #   }
-      # }
-
-      # if (Get-HasProperty($result, 'Break')) {
-      #   if ($result.Break) {
-      #     break;
-      #   }
-      # }
     }
 
     $index++;
   } # ForEach-Object
-
-  # THIS IS ALL SUMMARY CODE, INVOKE THE SUMMARY BLOCK and PASS IN INDEX
-  # AS THE TAOTAL NUMBER OF FILES PROCESSED
-  #
-  # if ($trigger -and (-not ([String]::IsNullOrEmpty($summary)))) {
-  #   Write-Host '$endOfProcessingLine' -ForegroundColor $LineColour;
-
-  #   Write-2PairInColour @(
-  #     ('Summary', $GeneralMessageDescColour), ($summary, 'Yellow'),
-  #     ('No of files', $GeneralMessageDescColour), ($index.ToString(), $GeneralMessageValueColour)
-  #   );
-
-  #   Write-Host '$endOfProcessingLine' -ForegroundColor $LineColour;
-  # }
 
   return $collection;
 }

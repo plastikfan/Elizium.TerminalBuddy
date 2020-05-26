@@ -62,8 +62,6 @@ function write-HostItemDecorator {
       'Trigger' = $_trigger;
     }
 
-    Write-Host "DEBUG^^^: write-HostItemDecorator is about to invoke ... file: '$($_underscore.Name)', index: '$index'";
-
     return & $decoratee @parameters;
   }
 
@@ -73,7 +71,6 @@ function write-HostItemDecorator {
   [string]$message = $PassThru['MESSAGE'];
   # Now write to he host
   #
-  Write-Host "=== DECORATOR === '${message}'";
 
   Write-ThemedPairsInColour -Pairs @(, @('filename', $Underscore.Name)) `
     -Theme $krayolaTheme -Message $message;

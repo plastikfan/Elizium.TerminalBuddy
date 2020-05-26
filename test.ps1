@@ -9,7 +9,7 @@
 $P = 'C:\tools\ColorTool\schemes'
 $O = 'C:\Users\Plastikfan\dev\Testing\output.terminal-settings.json'
 
-ConvertFrom-ItermColors -Path $P -Filter 'a*' -Out $O
+ConvertFrom-ItermColors -Path $P -Filter 'a*.itermcolors' -Out $O
 
 # ([xml]@(Get-Content -Path C:\tools\ColorTool\schemes\Zenburn.itermcolors)).ChildNodes -gt 0
 

@@ -152,7 +152,9 @@ function import-ItermColors {
         [string]$colourName = $k.Node.InnerText;
         
         # https://vexx32.github.io/2018/11/22/Implementing-ShouldProcess/
-        [System.Collections.Hashtable]$kols = handleColourComponents -AnsiColour $k -ColourDictionary $colourDetails;
+        #
+        [System.Collections.Hashtable]$kols = handleColourComponents -AnsiColour $k `
+          -ColourDictionary $colourDetails;
         [string]$colourHash = toRGB -Components $kols;
         $colourIndex++;
 
@@ -178,16 +180,15 @@ function import-ItermColors {
   [System.Collections.Hashtable]$terminalThemes = @{};
   if ($PassThru.ContainsKey('ACCUMULATOR')) {
     $terminalThemes = $PassThru["ACCUMULATOR"];
-    Write-Host "Found the ACCUMULATOR with $($terminalThemes.Count) items";
   } else {
-    Write-Host "Creating new ACCUMULATOR ";
     $PassThru['ACCUMULATOR'] = $terminalThemes;
   }
   
   [System.Xml.XmlDocument]$document = [xml]@(Get-Content -Path $Underscore.Fullname);
 
   if ($document) {
-    [string]$terminalTheme = buildSchemeJsonFromDocument -ThemeName $Underscore.Name -XmlDocument $document;
+    [string]$terminalTheme = buildSchemeJsonFromDocument -ThemeName `
+      $Underscore.Name -XmlDocument $document;
 
     if (-not([string]::IsNullOrEmpty($terminalTheme))) {
       $result | Add-Member -MemberType NoteProperty -Name 'Trigger' -Value $true;

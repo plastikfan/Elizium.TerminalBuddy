@@ -86,22 +86,21 @@ function ConvertFrom-ItermColors {
   }
 
   [scriptblock]$wrapper = {
+    # This wrapper is required because you can't pass a function name as a variable
+    # without PowerShell mistaking it for an invoke request.
+    #
     param(
       $_underscore, $_index, $_passthru, $_trigger
     )
 
-    Write-Host "DEBUG: WRAPPER INVOKING ... file: '$($_underscore.Name)', index: '$index'"
     return write-HostItemDecorator -Underscore $_underscore `
       -Index $_index `
       -PassThru $_passthru `
       -Trigger $_trigger;
   }
-  Write-Host "~~~ DEBUG invoking for path: $Path";
 
   $null = invoke-ForeachFile -Path $Path -Body $wrapper -PassThru $passThru `
     -Condition $containsXML -Filter $Filter;
-
-  Write-Host "~~~ DEBUG invoke complete, Out: $Out";
 
   # Now collate the results stored inside the passthru
   #
@@ -111,9 +110,6 @@ function ConvertFrom-ItermColors {
     if ($accumulator) {
       [string]$outputContent = composeAll -Themes $accumulator;
       Set-Content -Path $Out -Value $outputContent;
-    }
-    else {
-      Write-Host "ACCUMULATOR is empty";
     }
   }
 } # ConvertFrom-ItermColors
