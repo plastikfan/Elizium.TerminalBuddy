@@ -136,8 +136,8 @@ function invoke-ForeachFile {
   #   $parameters['LiteralPath'] = $LiteralPath;
   # }
 
-    Write-Host "DEBUG (invoke-ForeachFile): Filter: $Filter";
-    Write-Host "DEBUG (invoke-ForeachFile): Path: $Path";
+  Write-Host "DEBUG (invoke-ForeachFile): Filter: $Filter";
+  Write-Host "DEBUG (invoke-ForeachFile): Path: $Path";
 
   & 'Get-ChildItem' @parameters | get-SortedFilesNatural | Where-Object {
     $Condition.Invoke($_);
@@ -160,6 +160,12 @@ function invoke-ForeachFile {
     Write-Host "@@@ invoke-ForeachFile is about to invoke file: '$($_.Name)', index: '$index'"
     $result = $Body.Invoke($_, $index, $PassThru, $trigger);
 
+    if ($PassThru.ContainsKey('ACCUMULATOR')) {
+      [System.Collections.Hashtable]$accumulator = $PassThru['ACCUMULATOR'];
+      Write-Host "DEBUG: invoke-ForeachFile found ACCUMULATOR with $($accumulator.Count) entries";
+    } else {
+      Write-Host "DEBUG: invoke-ForeachFile could not find ACCUMULATOR";
+    }
     # Handle the result
     #
     if ($result) {
@@ -169,13 +175,13 @@ function invoke-ForeachFile {
       #     ($result.Product, $result.Colour) );
       # }
 
-      # if ($result.Contains('Trigger') -and $result.Trigger) {
-      #   $trigger = $true;
-      # }
+      if ($result.Contains('Trigger') -and $result.Trigger) {
+        $trigger = $true;
+      }
 
-      # if ($result.Contains('Break') -and $result.Break) {
-      #   break;
-      # }
+      if ($result.Contains('Break') -and $result.Break) {
+        break;
+      }
 
       # if (Get-HasProperty($result, 'Trigger')) {
       #   if ($result.Trigger) {

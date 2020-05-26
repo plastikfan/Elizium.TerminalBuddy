@@ -15,13 +15,52 @@ function ConvertFrom-ItermColors {
 
     [AllowEmptyString()]
     [ValidateScript( { return ([string]::IsNullOrWhiteSpace($_) ) -or (-not(Test-Path $_ -PathType ‘Leaf’)) })]
-    [string]$Out = '',
+    [string]$Out,
 
     [Parameter(Mandatory = $false)]
     [AllowEmptyString()]
     [string]
     $KrayolaTheme
   )
+
+  function composeAll {
+    [OutputType([string])]
+    param(
+      [Parameter()]
+      [System.Collections.Hashtable]$Themes,
+
+      [Parameter()]
+      [switch]$Raw
+    )
+
+    [string]$outputContent = '{ "schemes": [';
+    [string]$close = '] }';
+
+    if ($Raw.ToBool()) {
+      $close = $outputContent = '';
+    }
+
+    [System.Collections.IDictionaryEnumerator]$enumerator = $Themes.GetEnumerator();
+
+    if ($Themes.Count -gt 0) {
+      while ($enumerator.MoveNext()) {
+        [System.Collections.DictionaryEntry]$entry = $enumerator.Current;
+        [string]$themeFragment = $entry.Value;
+        $outputContent += ($themeFragment + ',');
+      }
+
+      [int]$last = $outputContent.LastIndexOf(',');
+      $outputContent = $outputContent.Substring(0, $last);
+    }
+
+    $outputContent += $close;
+
+    if (-not($Raw.ToBool())) {
+      $outputContent = $outputContent | ConvertTo-Json | ConvertFrom-Json;
+    }
+
+    return $outputContent;
+  }
 
   [scriptblock]$containsXML = {
     # Not making assumption about suffix of the specfied source file(s), since
@@ -67,23 +106,14 @@ function ConvertFrom-ItermColors {
   # Now collate the results stored inside the passthru
   #
   if ($passThru.ContainsKey('ACCUMULATOR')) {
-    [System.Collections.Hashtable]$terminalThemes = $passThru['ACCUMULATOR'];
-    [string]$outputContent = '{ "schemes": [';
-    [string]$close = '] }';
+    [System.Collections.Hashtable]$accumulator = $passThru['ACCUMULATOR'];
 
-    [int]$themeCount = 0;
-    foreach ($theme in $terminalThemes) {
-      $themeCount++;
-      $outputContent += $theme;
-
-      if ($themeCount -lt $terminalThemes.Count) {
-        $outputContent += ','
-      }
+    if ($accumulator) {
+      [string]$outputContent = composeAll -Themes $accumulator;
+      Set-Content -Path $Out -Value $outputContent;
     }
-
-    # $outputContent += $close;
-    # $outputContent = $outputContent | ConvertFrom-Json | ConvertTo-Json;
-
-    # Set-Content -Path $Out -Value $outputContent;
-  } # ACCUMULATOR
+    else {
+      Write-Host "ACCUMULATOR is empty";
+    }
+  }
 } # ConvertFrom-ItermColors

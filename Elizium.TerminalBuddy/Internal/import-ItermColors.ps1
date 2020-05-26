@@ -168,22 +168,34 @@ function import-ItermColors {
       [string]$jsonColourScheme = ConvertTo-Json -InputObject $colourScheme;
 
       Write-Host "$jsonColourScheme";
+
+      return $jsonColourScheme;
     }
   } # buildSchemeJsonFromDocument
 
+  [PSCustomObject]$result = [PSCustomObject]@{}
+
   [System.Collections.Hashtable]$terminalThemes = @{};
-  if ($passthru.ContainsKey("ACCUMULATOR")) {
-    $terminalThemes = $passthru["ACCUMULATOR"];
+  if ($PassThru.ContainsKey('ACCUMULATOR')) {
+    $terminalThemes = $PassThru["ACCUMULATOR"];
+    Write-Host "Found the ACCUMULATOR with $($terminalThemes.Count) items";
   } else {
-    $passthru["ACCUMULATOR"] = $terminalThemes;
+    Write-Host "Creating new ACCUMULATOR ";
+    $PassThru['ACCUMULATOR'] = $terminalThemes;
   }
   
   [System.Xml.XmlDocument]$document = [xml]@(Get-Content -Path $Underscore.Fullname);
 
   if ($document) {
     [string]$terminalTheme = buildSchemeJsonFromDocument -ThemeName $Underscore.Name -XmlDocument $document;
+
+    if (-not([string]::IsNullOrEmpty($terminalTheme))) {
+      $result | Add-Member -MemberType NoteProperty -Name 'Trigger' -Value $true;
+    }
     $terminalThemes[$Underscore.Name] = $terminalTheme;
+
+    $PassThru['ACCUMULATOR'] = $terminalThemes;
   }
 
-  return @{}
+  return $result
 } # import-ItermColors

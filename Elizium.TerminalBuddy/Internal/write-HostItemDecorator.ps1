@@ -67,10 +67,10 @@ function write-HostItemDecorator {
     return & $decoratee @parameters;
   }
 
-  [System.Collections.Hashtable]$krayolaTheme = $passthru['KRAYOLA-THEME'];
+  [System.Collections.Hashtable]$krayolaTheme = $PassThru['KRAYOLA-THEME'];
   $invokeResult = $decorator.Invoke($Underscore, $Index, $PassThru, $Trigger);
 
-  [string]$message = $passthru['MESSAGE'];
+  [string]$message = $PassThru['MESSAGE'];
   # Now write to he host
   #
   Write-Host "=== DECORATOR === '${message}'";
