@@ -16,11 +16,11 @@ function get-Theme {
     "KEY-PLACE-HOLDER"   = "<%KEY%>";
     "VALUE-PLACE-HOLDER" = "<%VALUE%>";
     "KEY-COLOURS"        = @("DarkCyan");
-    "VALUE-COLOURS"      = @("DarkBlue");
+    "VALUE-COLOURS"      = @("Magenta");
     "OPEN"               = "◄◄◄ <";
     "CLOSE"              = "> ►►►";
     "SEPARATOR"          = " ^^ ";
-    "META-COLOURS"       = @("Black");
+    "META-COLOURS"       = @("Yellow");
     "MESSAGE-COLOURS"    = @("DarkGreen");
     "MESSAGE-SUFFIX"     = " // ";
   }

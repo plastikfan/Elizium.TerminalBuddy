@@ -1,6 +1,6 @@
 
 function ConvertFrom-ItermColors {
-  [CmdletBinding()]
+  [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
   [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingWriteHost", "")]
   [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseBOMForUnicodeEncodedFile", "")]
   [Alias('cfic', 'Make-WtSchemesIC')]

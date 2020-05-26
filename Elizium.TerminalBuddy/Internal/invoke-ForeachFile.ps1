@@ -136,22 +136,12 @@ function invoke-ForeachFile {
   #   $parameters['LiteralPath'] = $LiteralPath;
   # }
 
-<#
-  [System.IO.FileSystemInfo.FileInfo]$collection = Get-ChildItem -Path $Path -File -Filter $Filter `
-    -Include $Include | Get-SortedFilesNatural | Where-Object {
-    $Condition.Invoke($_);
-  } | ForEach-Object {
-#>
-
     Write-Host "DEBUG (invoke-ForeachFile): Filter: $Filter";
     Write-Host "DEBUG (invoke-ForeachFile): Path: $Path";
 
   & 'Get-ChildItem' @parameters | get-SortedFilesNatural | Where-Object {
     $Condition.Invoke($_);
   } | ForEach-Object {
-
-    $index++;
-
     if ($isVerbose) {
       # TODO: CHANGE THIS:
       #
@@ -199,6 +189,8 @@ function invoke-ForeachFile {
       #   }
       # }
     }
+
+    $index++;
   } # ForEach-Object
 
   # THIS IS ALL SUMMARY CODE, INVOKE THE SUMMARY BLOCK and PASS IN INDEX
