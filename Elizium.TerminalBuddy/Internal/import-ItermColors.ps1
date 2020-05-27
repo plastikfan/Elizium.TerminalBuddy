@@ -43,6 +43,7 @@
 function import-ItermColors {
 
   [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingWriteHost", "")]
+  [OutputType([PSCustomObject])]
   [CmdletBinding()] # SupportsShouldProcess, ConfirmImpact = 'Medium'
   param (
     [Parameter(
