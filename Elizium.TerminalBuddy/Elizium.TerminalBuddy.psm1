@@ -1,6 +1,9 @@
 
 Set-StrictMode -Version Latest
 
+[string]$WindowsTerminalSettingsPath =
+  Resolve-Path -Path '~\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json'
+
 $functionFolders = @('Public', 'Internal')
 foreach ($folder in $functionFolders)
 {

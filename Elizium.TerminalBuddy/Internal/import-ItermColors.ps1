@@ -99,7 +99,7 @@ function import-ItermColors {
 
       [float]$numeric = 0;
       if ([float]::TryParse($val, [ref]$numeric)) {
-        $colourComponents[$key] = [int][math]::Ceiling($numeric * 255);
+        $colourComponents[$key] = [int][math]::Round($numeric * 255);
       }
     } while ($node);
 
@@ -163,13 +163,13 @@ function import-ItermColors {
             -Name $ItermTerminalColourMap[$colourName] -Value "$colourHash";
         }
         else {
-          Write-Warning "Skipping un-mapped colour: $colourName";
+          Write-Verbose "Skipping un-mapped colour: $colourName";
         }
       }
 
       [string]$jsonColourScheme = ConvertTo-Json -InputObject $colourScheme;
 
-      Write-Host "$jsonColourScheme";
+      Write-Verbose "$jsonColourScheme";
 
       return $jsonColourScheme;
     }
