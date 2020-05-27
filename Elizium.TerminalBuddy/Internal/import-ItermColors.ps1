@@ -191,8 +191,11 @@ function import-ItermColors {
     [string]$terminalTheme = buildSchemeJsonFromDocument -ThemeName `
       $Underscore.Name -XmlDocument $document;
 
-    if (-not([string]::IsNullOrEmpty($terminalTheme))) {
+    if (-not([string]::IsNullOrWhiteSpace($terminalTheme))) {
       $result | Add-Member -MemberType NoteProperty -Name 'Trigger' -Value $true;
+
+      [string]$product = [System.IO.Path]::GetFileNameWithoutExtension($_.Name);
+      $result | Add-Member -MemberType NoteProperty -Name 'Product' -Value $product;
     }
     $terminalThemes[$Underscore.Name] = $terminalTheme;
 

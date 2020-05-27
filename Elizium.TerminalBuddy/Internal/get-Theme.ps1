@@ -19,7 +19,7 @@ function get-Theme {
     "VALUE-COLOURS"      = @("Gray");
     "OPEN"               = "◄◄◄ <";
     "CLOSE"              = "> ►►►";
-    "SEPARATOR"          = " ^^ ";
+    "SEPARATOR"          = ", ";
     "META-COLOURS"       = @("Yellow");
     "MESSAGE-COLOURS"    = @("Cyan");
     "MESSAGE-SUFFIX"     = " // ";

@@ -19,7 +19,8 @@ function write-HostItemDecorator {
       Mandatory = $true
     )]
     [ValidateScript( {
-      return $_.ContainsKey('BODY') -and $_.ContainsKey('MESSAGE') -and $_.ContainsKey('KRAYOLA-THEME')
+      return $_.ContainsKey('BODY') -and $_.ContainsKey('MESSAGE') `
+        -and $_.ContainsKey('KRAYOLA-THEME') -and $_.ContainsKey('ITEM-LABEL')
     })]
     [System.Collections.Hashtable]
     $PassThru,
@@ -28,22 +29,6 @@ function write-HostItemDecorator {
   )
 
 <#
-    [Parameter(Mandatory = $true)]
-    [scriptblock]$Body,
-
-    [Parameter(Mandatory = $true)]
-    [string]
-    $Label,
-
-    [Parameter(Mandatory = $true)]
-    [string]
-    $ItemName,
-
-    [Parameter(Mandatory = $false)]
-
-    [System.Collections.Hashtable]
-    $Theme,
-
     [Parameter(Mandatory = $false)]
     [string[][]]
     $TextSnippets,
@@ -69,11 +54,18 @@ function write-HostItemDecorator {
   $invokeResult = $decorator.Invoke($Underscore, $Index, $PassThru, $Trigger);
 
   [string]$message = $PassThru['MESSAGE'];
-  # Now write to he host
-  #
+  [string]$itemLabel = $PassThru['ITEM-LABEL']
+  [string[][]]$pairs = @(@('No', $("{0,3}" -f ($Index + 1))), @($itemLabel, $Underscore.Name));
 
-  Write-ThemedPairsInColour -Pairs @(, @('filename', $Underscore.Name)) `
-    -Theme $krayolaTheme -Message $message;
+  if ($invokeResult.Product) {
+    [string]$productLabel = 'Product';
+    if ($PassThru.ContainsKey('PRODUCT-LABEL')) {
+      $productLabel = $PassThru['PRODUCT-LABEL'];
+    }
+    $pairs = $pairs += , @($productLabel, $invokeResult.Product);
+  }
+
+  Write-ThemedPairsInColour -Pairs $pairs -Theme $krayolaTheme -Message $message;
 
   return $invokeResult;
 }

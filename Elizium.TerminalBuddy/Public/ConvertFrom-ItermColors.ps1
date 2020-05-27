@@ -127,8 +127,10 @@ function ConvertFrom-ItermColors {
 
   [System.Collections.Hashtable]$passThru = @{
     'BODY'          = 'import-ItermColors';
-    'MESSAGE'       = 'Importing Terminal Theme';
+    'MESSAGE'       = 'Importing Terminal Scheme';
     'KRAYOLA-THEME' = $displayTheme;
+    'ITEM-LABEL'    = 'Scheme filename';
+    'PRODUCT-LABEL' = 'Scheme name';
   }
 
   [scriptblock]$wrapper = {
