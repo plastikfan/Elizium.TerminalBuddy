@@ -57,84 +57,45 @@ function invoke-ForeachFile {
     Number of files found.
   #>
 
-  [CmdletBinding()] # SupportsShouldProcess, then in impl, call $PSCmdlet.ShouldProcess(?)
+  [CmdletBinding()]
   [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingWriteHost", "")]
   param
   (
     [Parameter(
       Mandatory = $true
-      # ParameterSetName = 'Path',
-      # Position = 0
     )]
-    # [ValidateScript( { return Test-Path $_ -PathType Container })]
-    # [SupportsWildcards]
     [string]$Path,
-
-    # [Parameter(
-    #   Mandatory = $true
-    #   # ParameterSetName = 'LiteralPath',
-    #   # Position = 0
-    # )]
-    # [ValidateScript( { return Test-Path $_ -PathType Container })]
-    # [SupportsWildcards]
-    # [string]$LiteralPath,
 
     [Parameter(
       Mandatory = $true
-      # Position = 1
     )]
     [scriptblock]$Body,
 
     [Parameter(
       Mandatory = $false
-      # Position = 2
     )]
     [System.Collections.Hashtable]$PassThru,
 
     [Parameter(
       Mandatory = $false
-      # Position = 3
     )]
-    # [SupportsWildcards]
-    [string]$Filter = '*',
 
-    # [Parameter(
-    #   Mandatory = $false,
-    #   Position = 4
-    # )]
-    # [scriptblock]$OnSummary,
+    [string]$Filter = '*',
 
     [Parameter(
       Mandatory = $false
-      # Position = 4
     )]
     [scriptblock]$Condition = ( { return $true; })
-
-    # [Parameter(
-    #   Mandatory = $false,
-    #   ParameterSetName = 'Include',
-    #   Position = 6
-    # )]
-    # [string[]]$Include
   )
 
   [int]$index = 0;
   [boolean]$isVerbose = $false;
   [boolean]$trigger = $false;
 
-  # use the call op and @splatted arguments to invoke gci
-  #
   [System.Collections.Hashtable]$parameters = @{
     'Filter' = $Filter;
-    # 'Include' = $Include;
     'Path' = $Path;
-    # 'File' = $true;
   }
-  # if ($PSCmdlet.ParameterSetName -eq 'Path') {
-  #   $parameters['Path'] = $Path;
-  # } elseif ($PSCmdlet.ParameterSetName -eq 'LiteralPath') {
-  #   $parameters['LiteralPath'] = $LiteralPath;
-  # }
 
   & 'Get-ChildItem' @parameters | get-SortedFilesNatural | Where-Object {
     $Condition.Invoke($_);
@@ -147,22 +108,16 @@ function invoke-ForeachFile {
 
     # Do the invoke
     #
-    $result = $Body.Invoke($_, $index, $PassThru, $trigger);
+    [PSCustomObject]$result = $Body.Invoke($_, $index, $PassThru, $trigger);
 
-    # if ($PassThru.ContainsKey('ACCUMULATOR')) {
-    #   [System.Collections.Hashtable]$accumulator = $PassThru['ACCUMULATOR'];
-    #   Write-Host "DEBUG: invoke-ForeachFile found ACCUMULATOR with $($accumulator.Count) entries";
-    # } else {
-    #   Write-Host "DEBUG: invoke-ForeachFile could not find ACCUMULATOR";
-    # }
     # Handle the result
     #
     if ($result) {
-      if ($result.Contains('Trigger') -and $result.Trigger) {
+      if (($result.psobject.properties.match('Trigger') -and ($result.Trigger))) {
         $trigger = $true;
       }
 
-      if ($result.Contains('Break') -and $result.Break) {
+      if (($result.psobject.properties.match('Break') -and ($result.Break))) {
         break;
       }
     }

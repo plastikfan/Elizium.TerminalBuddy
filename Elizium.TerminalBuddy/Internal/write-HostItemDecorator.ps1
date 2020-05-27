@@ -2,6 +2,31 @@
 # Eventually, this function should go into Krayola
 #
 function write-HostItemDecorator {
+  <#
+  .NAME
+    write-HostItemDecorator
+
+  .SYNOPSIS
+    Performs iteration over a collection of files which are children of the directory
+    specified by the caller.
+
+  .PARAMETER $Underscore
+    The iterated target item provided by the parent iterator function
+
+  .PARAMETER $Index
+    0 based numeric index specifing the ordinal of the iterated target.
+
+  .PARAMETER $PassThru
+    The dictionary object used to pass parameters to the decorated scriptblock
+    (enclosed within the PassThru Hashtable)
+
+  .PARAMETER $Trigger
+
+  .RETURNS
+    The resullt of invoking the BODY script block.
+  #>
+
+  [OutputType([PSCustomObject])]
   [CmdletBinding()]
   [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingWriteHost", "")]
   param (

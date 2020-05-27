@@ -12,13 +12,13 @@ function get-Theme {
   )
 
   [System.Collections.Hashtable]$displayTheme = @{ # TODO: change this to something useful
-    "FORMAT"             = "'<%KEY%>' --> '<%VALUE%>'";
+    "FORMAT"             = "'<%KEY%>' => '<%VALUE%>'";
     "KEY-PLACE-HOLDER"   = "<%KEY%>";
     "VALUE-PLACE-HOLDER" = "<%VALUE%>";
     "KEY-COLOURS"        = @("DarkCyan");
     "VALUE-COLOURS"      = @("Gray");
-    "OPEN"               = "◄◄◄ <";
-    "CLOSE"              = "> ►►►";
+    "OPEN"               = "◄◄◄ [";
+    "CLOSE"              = "] ►►►";
     "SEPARATOR"          = ", ";
     "META-COLOURS"       = @("Yellow");
     "MESSAGE-COLOURS"    = @("Cyan");

@@ -1,4 +1,4 @@
-
+﻿
 [System.Collections.Hashtable]$ItermTerminalColourMap = @{
   # As defined in https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
   #
@@ -41,39 +41,59 @@
 }
 
 function import-ItermColors {
+  <#
+  .NAME
+    import-ItermColors
+
+  .SYNOPSIS
+    imports XML data from iterm file and converts to JSON format.
+
+  .PARAMETER $Underscore
+    fileinfo object representing the .itermcolors file.
+
+  .PARAMETER $Index
+    0 based numeric index specifing the ordinal of the file in the batch.
+
+  .PARAMETER $PassThru
+    The dictionary object containing additional parameters. Also used by
+  this function to append it's result to an 'ACCUMULATOR' hash (indexed
+  by scheme name), which ultimately allows all the schemes to be collated
+  into the 'schemes' array field in the settings file.
+
+  .PARAMETER $Trigger
+
+  .RETURNS
+    The result of invoking the BODY script block.
+  #>
 
   [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingWriteHost", "")]
   [OutputType([PSCustomObject])]
-  [CmdletBinding()] # SupportsShouldProcess, ConfirmImpact = 'Medium'
+  [CmdletBinding()]
   param (
     [Parameter(
       Mandatory = $true
-      # Position = 0
     )]
     [System.IO.FileSystemInfo]$Underscore,
 
     [Parameter(
       Mandatory = $true
-      # Position = 1
     )]
     [int]$Index,
 
     [Parameter(
       Mandatory = $true
-      # Position = 2
     )]
     [System.Collections.Hashtable]$PassThru,
 
     [Parameter(
       Mandatory = $false
-      # Position = 3
     )]
     [boolean]$Trigger
   )
 
   function handleColourComponents {
     [OutputType([System.Collections.Hashtable])]
-    [CmdletBinding()] # SupportsShouldProcess, ConfirmImpact = 'Medium'
+    [CmdletBinding()]
     param (
       [Parameter()]
       [Microsoft.PowerShell.Commands.SelectXmlInfo]$AnsiColour,
@@ -81,12 +101,6 @@ function import-ItermColors {
       [Parameter()]
       [Microsoft.PowerShell.Commands.SelectXmlInfo]$ColourDictionary
     )
-
-    # if ($PSCmdlet.ShouldProcess($AnsiColour, 'Import colour')) {
-    #   Write-Host "LET'S DO IT";
-    # } else {
-    #   Write-Host "NAH, FORGET IT";
-    # }
 
     [System.Collections.Hashtable]$colourComponents = @{};
     $node = $ColourDictionary.Node.FirstChild;
@@ -142,8 +156,6 @@ function import-ItermColors {
 
     [int]$colourIndex = 0;
     if ($colourKeys.Count -eq $colourDict.Count) {
-      # https://powershellexplained.com/2016-10-28-powershell-everything-you-wanted-to-know-about-pscustomobject/
-      #
       [PSCustomObject]$colourScheme = [PSCustomObject]@{
         name = [System.IO.Path]::GetFileNameWithoutExtension($Underscore.Name)
       }
@@ -151,9 +163,7 @@ function import-ItermColors {
       foreach ($k in $colourKeys) {
         $colourDetails = $colourDict[$colourIndex];
         [string]$colourName = $k.Node.InnerText;
-        
-        # https://vexx32.github.io/2018/11/22/Implementing-ShouldProcess/
-        #
+
         [System.Collections.Hashtable]$kols = handleColourComponents -AnsiColour $k `
           -ColourDictionary $colourDetails;
         [string]$colourHash = toRGB -Components $kols;
@@ -184,7 +194,7 @@ function import-ItermColors {
   } else {
     $PassThru['ACCUMULATOR'] = $terminalThemes;
   }
-  
+
   [System.Xml.XmlDocument]$document = [xml]@(Get-Content -Path $Underscore.Fullname);
 
   if ($document) {
