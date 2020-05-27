@@ -19,7 +19,7 @@ function write-HostItemDecorator {
       Mandatory = $true
     )]
     [ValidateScript( {
-      return $_.ContainsKey('BODY') -and $_.ContainsKey('MESSAGE') `
+      return $_.ContainsKey('BODY') `
         -and $_.ContainsKey('KRAYOLA-THEME') -and $_.ContainsKey('ITEM-LABEL')
     })]
     [System.Collections.Hashtable]
@@ -27,14 +27,6 @@ function write-HostItemDecorator {
 
     [boolean]$Trigger
   )
-
-<#
-    [Parameter(Mandatory = $false)]
-    [string[][]]
-    $TextSnippets,
-
-    [string]$EachItemLine = $LightDotsLine
-#>
 
   [scriptblock]$decorator = {
     param ($_underscore, $_index, $_passthru, $_trigger)
@@ -50,22 +42,45 @@ function write-HostItemDecorator {
     return & $decoratee @parameters;
   }
 
-  [System.Collections.Hashtable]$krayolaTheme = $PassThru['KRAYOLA-THEME'];
   $invokeResult = $decorator.Invoke($Underscore, $Index, $PassThru, $Trigger);
 
   [string]$message = $PassThru['MESSAGE'];
   [string]$itemLabel = $PassThru['ITEM-LABEL']
-  [string[][]]$pairs = @(@('No', $("{0,3}" -f ($Index + 1))), @($itemLabel, $Underscore.Name));
 
+  [System.Collections.Hashtable]$parameters = @{}
+  [string]$writerFn = '';
+
+  [string]$productLabel = '';
   if ($invokeResult.Product) {
-    [string]$productLabel = 'Product';
+    $productLabel = 'Product';
     if ($PassThru.ContainsKey('PRODUCT-LABEL')) {
       $productLabel = $PassThru['PRODUCT-LABEL'];
     }
-    $pairs = $pairs += , @($productLabel, $invokeResult.Product);
   }
 
-  Write-ThemedPairsInColour -Pairs $pairs -Theme $krayolaTheme -Message $message;
+  # Write with a Krayola Theme
+  #
+  if ($PassThru.ContainsKey('KRAYOLA-THEME')) {
+    [System.Collections.Hashtable]$krayolaTheme = $PassThru['KRAYOLA-THEME'];
+    [string[][]]$themedPairs = @(@('No', $("{0,3}" -f ($Index + 1))), @($itemLabel, $Underscore.Name));
+
+    if (-not([string]::IsNullOrWhiteSpace($productLabel))) {
+      $themedPairs = $themedPairs += , @($productLabel, $invokeResult.Product);
+    }
+
+    $parameters['Pairs'] = $themedPairs;
+    $parameters['Theme'] = $krayolaTheme;
+
+    $writerFn = 'Write-ThemedPairsInColour';
+  }
+
+  if (-not([string]::IsNullOrWhiteSpace($message))) {
+    $parameters['Message'] = $message;
+  }
+
+  if (-not([string]::IsNullOrWhiteSpace($writerFn))) {
+    & $writerFn @parameters;
+  }
 
   return $invokeResult;
 }
