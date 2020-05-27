@@ -10,7 +10,7 @@ $WindowsTerminalSettingsPath =
   Resolve-Path -Path '~\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json'
 
 $P = 'C:\tools\ColorTool\schemes'
-$O = 'C:\Users\Plastikfan\dev\Testing\output.terminal-settings.json'
+$O = '~\dev\Testing\output.terminal-settings.json'
 
 # ConvertFrom-ItermColors -Path $P -Filter 'a*.itermcolors' -Out $O
 ConvertFrom-ItermColors -Path $P -Filter 'a*.itermcolors' -SaveTerminalSettings
