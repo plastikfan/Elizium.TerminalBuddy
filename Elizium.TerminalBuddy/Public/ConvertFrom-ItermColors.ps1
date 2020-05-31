@@ -74,7 +74,7 @@ function ConvertFrom-ItermColors {
     When not in Dry Run mode ($Force and $SaveTerminalSettings specified), this paramter
     specifies the path to backup the live Windows Terminal Settings file to.
 
-  .PARAMETER $KrayolaTheme
+  .PARAMETER $ThemeName
     The name of a Krayola Theme, that has been configured inside the global $KrayolaThemes
     hashtable variable. If not present, then an internal theme is used. The Krayola Theme
     shapes how output of this command is generated to the consle.
@@ -114,7 +114,7 @@ function ConvertFrom-ItermColors {
     [Parameter(Mandatory = $false)]
     [AllowEmptyString()]
     [string]
-    $KrayolaTheme
+    $ThemeName
   )
 
   function composeAll {
@@ -209,7 +209,7 @@ function ConvertFrom-ItermColors {
     }
   } # $containsXML
 
-  [System.Collections.Hashtable]$displayTheme = get-Theme -KrayolaTheme $KrayolaTheme;
+  [System.Collections.Hashtable]$displayTheme = Get-KrayolaTheme -KrayolaThemeName $ThemeName;
 
   [System.Collections.Hashtable]$passThru = @{
     'BODY'          = 'import-ItermColors';

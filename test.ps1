@@ -1,6 +1,5 @@
 
 . .\Elizium.TerminalBuddy\Internal\get-SortedFilesNatural.ps1
-. .\Elizium.TerminalBuddy\Internal\get-Theme.ps1
 . .\Elizium.TerminalBuddy\Internal\import-ItermColors.ps1
 . .\Elizium.TerminalBuddy\Internal\invoke-ForeachFile.ps1
 . .\Elizium.TerminalBuddy\Internal\write-HostItemDecorator.ps1
@@ -17,7 +16,7 @@ $P = 'C:\tools\ColorTool\schemes'
 
 ConvertFrom-ItermColors -Path C:\shared\Themes\ITerm2\Favourites -SaveTerminalSettings
 
-$testTheme = get-Theme;
+$testTheme = Get-KrayolaTheme;
 
 Write-ThemedPairsInColour -Pairs @(, @('Windows settings file', $WindowsTerminalSettingsPath)) `
     -Theme $testTheme -Message $message;
