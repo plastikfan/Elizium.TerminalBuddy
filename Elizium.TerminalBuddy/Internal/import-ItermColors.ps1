@@ -2,29 +2,29 @@
 [System.Collections.Hashtable]$ItermTerminalColourMap = @{
   # As defined in https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
   #
-  "Ansi 0 Color"      = "black";
-  "Ansi 1 Color"      = "red";
-  "Ansi 2 Color"      = "green";
-  "Ansi 3 Color"      = "yellow";
-  "Ansi 4 Color"      = "blue";
-  "Ansi 5 Color"      = "purple"; # magenta
-  "Ansi 6 Color"      = "cyan";
-  "Ansi 7 Color"      = "white";
-  "Ansi 8 Color"      = "brightBlack";
-  "Ansi 9 Color"      = "brightRed";
-  "Ansi 10 Color"     = "brightGreen";
-  "Ansi 11 Color"     = "brightYellow";
-  "Ansi 12 Color"     = "brightBlue";
-  "Ansi 13 Color"     = "brightPurple"; # bright magenta
-  "Ansi 14 Color"     = "brightCyan";
-  "Ansi 15 Color"     = "brightWhite";
+  'Ansi 0 Color'      = 'black';
+  'Ansi 1 Color'      = 'red';
+  'Ansi 2 Color'      = 'green';
+  'Ansi 3 Color'      = 'yellow';
+  'Ansi 4 Color'      = 'blue';
+  'Ansi 5 Color'      = 'purple'; # magenta
+  'Ansi 6 Color'      = 'cyan';
+  'Ansi 7 Color'      = 'white';
+  'Ansi 8 Color'      = 'brightBlack';
+  'Ansi 9 Color'      = 'brightRed';
+  'Ansi 10 Color'     = 'brightGreen';
+  'Ansi 11 Color'     = 'brightYellow';
+  'Ansi 12 Color'     = 'brightBlue';
+  'Ansi 13 Color'     = 'brightPurple'; # bright magenta
+  'Ansi 14 Color'     = 'brightCyan';
+  'Ansi 15 Color'     = 'brightWhite';
 
   # https://docs.microsoft.com/en-gb/windows/terminal/customize-settings/color-schemes
   #
-  "Background Color"  = "background";
-  "Foreground Color"  = "foreground";
-  "Cursor Text Color" = "cursorColor";
-  "Selection Color"   = "selectionBackground";
+  'Background Color'  = 'background';
+  'Foreground Color'  = 'foreground';
+  'Cursor Text Color' = 'cursorColor';
+  'Selection Color'   = 'selectionBackground';
 
   # Iterm colours discovered but not not mapped (to be logged out in verbose mode)
   #
@@ -35,9 +35,9 @@
 }
 
 [System.Collections.Hashtable]$ComponentNamingScheme = @{
-  "RED_C"   = "Red Component";
-  "GREEN_C" = "Green Component";
-  "BLUE_C"  = "Blue Component";
+  'RED_C'   = 'Red Component';
+  'GREEN_C' = 'Green Component';
+  'BLUE_C'  = 'Blue Component';
 }
 
 function import-ItermColors {
@@ -66,7 +66,8 @@ function import-ItermColors {
     The result of invoking the BODY script block.
   #>
 
-  [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingWriteHost", "")]
+  [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingWriteHost', '')]
+  [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '')]
   [OutputType([PSCustomObject])]
   [CmdletBinding()]
   param (
@@ -130,13 +131,13 @@ function import-ItermColors {
       [System.Collections.Hashtable]$NamingScheme = $ComponentNamingScheme
     )
 
-    [int]$R = $Components[$NamingScheme["RED_C"]];
-    [int]$G = $Components[$NamingScheme["GREEN_C"]];
-    [int]$B = $Components[$NamingScheme["BLUE_C"]];
+    [int]$R = $Components[$NamingScheme['RED_C']];
+    [int]$G = $Components[$NamingScheme['GREEN_C']];
+    [int]$B = $Components[$NamingScheme['BLUE_C']];
 
     # Terminal doesn't support Alpha values so let's ignore the Alpha component
     #
-    return "#{0:X2}{1:X2}{2:X2}" -f $R, $G, $B;
+    return '#{0:X2}{1:X2}{2:X2}' -f $R, $G, $B;
   } # toRGB
 
   function buildSchemeJsonFromDocument {
@@ -190,7 +191,7 @@ function import-ItermColors {
 
   [System.Collections.Hashtable]$terminalThemes = @{};
   if ($PassThru.ContainsKey('ACCUMULATOR')) {
-    $terminalThemes = $PassThru["ACCUMULATOR"];
+    $terminalThemes = $PassThru['ACCUMULATOR'];
   } else {
     $PassThru['ACCUMULATOR'] = $terminalThemes;
   }

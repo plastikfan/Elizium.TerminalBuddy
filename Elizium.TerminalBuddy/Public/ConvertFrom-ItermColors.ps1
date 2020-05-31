@@ -43,7 +43,7 @@ function ConvertFrom-ItermColors {
     process will not preserve the comments. There is an alternative api that supposedly supports
     non standard JSON features, newtonsoft.json.ConvertTo-JsonNewtonsoft/ConvertFrom-JsonNewtonsoft
     but using these functions yield unsatifactory results.
-      2) ConvertFrom-Json/Converto-Json do not properly handle the profiles 
+      2) ConvertFrom-Json/Converto-Json do not properly handle the profiles
 
   .PARAMETER $Path
     The parent directory to iterate
@@ -60,7 +60,7 @@ function ConvertFrom-ItermColors {
   .PARAMETER $SaveTerminalSettings
     switch, to indcate that the converted schemes should be saved into a complete settings
     file. Which settings file depends on the presence of the Force paramter, which
-    
+
   .PARAMETER $Force
     switch to indicate whether live settings should be modified to include generated schemes.
     To avoid accidental invocation, needs to be used in addition to SaveTerminalSettings.
@@ -81,8 +81,9 @@ function ConvertFrom-ItermColors {
   #>
 
   [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
-  [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingWriteHost", "")]
-  [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseBOMForUnicodeEncodedFile", "")]
+  [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingWriteHost', '')]
+  [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseBOMForUnicodeEncodedFile', '')]
+  [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '')]
   [Alias('cfic', 'Make-WtSchemesIC')]
   param (
     [Parameter(Mandatory = $true)]
