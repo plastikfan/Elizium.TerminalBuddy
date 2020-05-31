@@ -45,7 +45,7 @@ function invoke-ForeachFile {
   #>
 
   [CmdletBinding()]
-  [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingWriteHost", "")]
+  [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '')]
   param
   (
     [Parameter(
