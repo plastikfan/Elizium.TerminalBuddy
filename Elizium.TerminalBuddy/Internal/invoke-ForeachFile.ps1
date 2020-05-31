@@ -11,9 +11,6 @@ function invoke-ForeachFile {
   .PARAMETER $Path
     The parent directory to iterate
 
-  .PARAMETER $LiteralPath
-    The parent directory to iterate
-
   .PARAMETER $Body
     The implementation script block that is to be implemented for each child file. The
     script block can either return $null or a PSCustomObject with fields Message(string) giving an
@@ -42,16 +39,6 @@ function invoke-ForeachFile {
   .PARAMETER $Inclusion
     Value that needs to be passed in into Get-ChildItem to additionally specify files
     in the include list.
-
-  .PARAMETER $eachItemLine (THIS SHOULD GO INTO WRTE-HOST DECORATOR)
-    The line type to display after each directory iteration.
-
-  .PARAMETER $endOfProcessingLine (THIS SHOULD GO INTO WRTE-HOST DECORATOR)
-    The line type to display at the end of the directory iteration.
-
-  .PARAMETER $Verb (THIS IS SUPOSED TO BE VERBOSE); NO LONGER REQUITED / CmdletBinding
-    Flag to indicate wether any output is generated for each file. Any output generated at a
-    file level may become too much depending on the compound functionality implemented.
 
   .RETURNS
     Number of files found.
@@ -89,7 +76,6 @@ function invoke-ForeachFile {
   )
 
   [int]$index = 0;
-  [boolean]$isVerbose = $false;
   [boolean]$trigger = $false;
 
   [System.Collections.Hashtable]$parameters = @{
@@ -97,15 +83,9 @@ function invoke-ForeachFile {
     'Path' = $Path;
   }
 
-  & 'Get-ChildItem' @parameters | get-SortedFilesNatural | Where-Object {
+  $collection = & 'Get-ChildItem' @parameters | get-SortedFilesNatural | Where-Object {
     $Condition.Invoke($_);
   } | ForEach-Object {
-    if ($isVerbose) {
-      # TODO: CHANGE THIS:
-      #
-      Write-Verbose $eachItemLine -ForegroundColor $LineColour;
-    }
-
     # Do the invoke
     #
     [PSCustomObject]$result = $Body.Invoke($_, $index, $PassThru, $trigger);
@@ -113,11 +93,11 @@ function invoke-ForeachFile {
     # Handle the result
     #
     if ($result) {
-      if (($result.psobject.properties.match('Trigger') -and ($result.Trigger))) {
+      if (($result.psobject.properties['Trigger'] -and ($result.Trigger))) {
         $trigger = $true;
       }
 
-      if (($result.psobject.properties.match('Break') -and ($result.Break))) {
+      if (($result.psobject.properties['Break'] -and ($result.Break))) {
         break;
       }
     }

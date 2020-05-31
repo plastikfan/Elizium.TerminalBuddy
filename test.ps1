@@ -13,7 +13,9 @@ $P = 'C:\tools\ColorTool\schemes'
 # $O = '~\dev\Testing\output.terminal-settings.json'
 
 # ConvertFrom-ItermColors -Path $P -Filter 'a*.itermcolors' -Out $O
-ConvertFrom-ItermColors -Path $P -Filter 'a*.itermcolors' -SaveTerminalSettings
+# ConvertFrom-ItermColors -Path $P -Filter 'a*.itermcolors' -SaveTerminalSettings
+
+ConvertFrom-ItermColors -Path C:\shared\Themes\ITerm2\Favourites -SaveTerminalSettings
 
 $testTheme = get-Theme;
 
