@@ -184,13 +184,25 @@ function ConvertFrom-ItermColors {
     [System.Collections.ArrayList]$integratedSchemes = New-Object `
       -TypeName System.Collections.ArrayList -ArgumentList @(, $settingsSchemes);
 
+    [System.Collections.Hashtable]$integrationTheme = Get-KrayolaTheme;
+    $integrationTheme['VALUE-COLOURS'] = @(, @('Blue'));
+
+    [System.Collections.Hashtable]$skippingTheme = Get-KrayolaTheme;
+    $skippingTheme['VALUE-COLOURS'] = @(, @('Red'));
+
     foreach ($sch in $contentObject.schemes) {
+      [string[][]]$pairs = @(, @('Scheme name', $sch.name));
       if (-not(containsScheme -SchemeName $sch.name -Schemes $settingsSchemes)) {
+        Write-ThemedPairsInColour -Pairs $pairs -Theme $integrationTheme `
+          -Message 'Integrating new theme';
         $null = $integratedSchemes.Add($sch);
+      } else {
+        Write-ThemedPairsInColour -Pairs $pairs -Theme $skippingTheme `
+          -Message 'Skipping existing theme';
       }
     }
 
-    $settingsObject.schemes = $integratedSchemes;
+    $settingsObject.schemes = ($integratedSchemes | Sort-Object -Property name);
 
     Set-Content -Path $OutputPath -Value $($settingsObject | ConvertTo-Json);
   } # integrateIntoSettings
