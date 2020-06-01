@@ -16,11 +16,11 @@ function ConvertFrom-ItermColors {
     is not easy to leverage the work done by others in creating desirable terminal schemes.
     This function makes it easier to apply iterm colour schemes into Windows Terminal.
       There are multiple ways to use this function:
-      1) generate an Output file (denoted by $Out paramater), which will contain a JSON
+      1) generate an Output file (denoted by $Out parameter), which will contain a JSON
       object containing the colour schemes converted from iterm to Windows Terminal
       format.
       2) generate a new Dry Run file which is a copy of the current Windows Terminal
-      Settings file with the convertd schemes integrated into it.
+      Settings file with the converted schemes integrated into it.
       3) make a backup, of the Settings file, then integrate the generated schemes into
       the current Settings file. (See caveats further down below).
 
@@ -37,12 +37,12 @@ function ConvertFrom-ItermColors {
 
       And the caveats ...
       1) For some reason, Microsoft decided to include comments inside the JSON setting file
-    (probably in leu of there not being a proper settings UI, making configuring the settings
+    (probably in lieu of there not being a proper settings UI, making configuring the settings
     easier). However, comments are not part of the current JSON schema (although they are
     permitted in the rarely and sparsely supported json5 spec), which means that this conversion
     process will not preserve the comments. There is an alternative api that supposedly supports
     non standard JSON features, newtonsoft.json.ConvertTo-JsonNewtonsoft/ConvertFrom-JsonNewtonsoft
-    but using these functions yield unsatifactory results.
+    but using these functions yield unsatisfactory results.
       2) ConvertFrom-Json/Converto-Json do not properly handle the profiles
 
   .PARAMETER $Path
@@ -87,7 +87,7 @@ function ConvertFrom-ItermColors {
   [Alias('cfic', 'Make-WtSchemesIC')]
   param (
     [Parameter(Mandatory = $true)]
-    [ValidateScript( { return Test-Path $_ -PathType 'Container' })]
+    [ValidateScript( { return Test-Path $_ })]
     [string]
     $Path,
 
@@ -118,19 +118,22 @@ function ConvertFrom-ItermColors {
     $ThemeName
   )
 
+  # Local function composeAll, builds the json content representing all the schemes
+  # previously collated.
+  #
   function composeAll {
     [OutputType([string])]
     param(
       [Parameter()]
-      [System.Collections.Hashtable]$Themes
+      [System.Collections.Hashtable]$Schemes
     )
 
     [string]$outputContent = '{ "schemes": [';
     [string]$close = '] }';
 
-    [System.Collections.IDictionaryEnumerator]$enumerator = $Themes.GetEnumerator();
+    [System.Collections.IDictionaryEnumerator]$enumerator = $Schemes.GetEnumerator();
 
-    if ($Themes.Count -gt 0) {
+    if ($Schemes.Count -gt 0) {
       while ($enumerator.MoveNext()) {
         [System.Collections.DictionaryEntry]$entry = $enumerator.Current;
         [string]$themeFragment = $entry.Value;
@@ -147,6 +150,9 @@ function ConvertFrom-ItermColors {
     return $outputContent;
   } # composeAll
 
+  # Local function containsScheme, predicate that returns true if SchemeName is present
+  # in the Schemes collection.
+  #
   function containsScheme {
     [OutputType([boolean])]
     param(
@@ -160,9 +166,11 @@ function ConvertFrom-ItermColors {
     $found = $Schemes | Where-Object { $_.name -eq $SchemeName };
 
     return ($null -ne $found);
-  }
+  } # containsScheme
 
-  function integrateIntoSettings {
+  # Local function combineContent, combines the new Content just generated with
+  # the existing Settings file.
+  function combineContent {
     param(
       [Parameter()]
       [string]$Content,
@@ -171,10 +179,7 @@ function ConvertFrom-ItermColors {
       [string]$SettingsPath,
 
       [Parameter()]
-      [string]$OutputPath,
-
-      [Parameter()]
-      [switch]$Overwrite
+      [string]$OutputPath
     )
 
     [string]$settingsContentRaw = Get-Content -Path $SettingsPath -Raw;
@@ -206,7 +211,7 @@ function ConvertFrom-ItermColors {
     $settingsObject.schemes = ($integratedSchemes | Sort-Object -Property name);
 
     Set-Content -Path $OutputPath -Value $($settingsObject | ConvertTo-Json);
-  } # integrateIntoSettings
+  } # combineContent
 
   [scriptblock]$containsXML = {
     # Not making assumption about suffix of the specfied source file(s), since
@@ -255,22 +260,49 @@ function ConvertFrom-ItermColors {
     [System.Collections.Hashtable]$accumulator = $passThru['ACCUMULATOR'];
 
     if ($accumulator) {
-      [string]$outputContent = composeAll -Themes $accumulator;
+      [string]$outputContent = composeAll -Schemes $accumulator;
+
+      [string]$copyFromOutputUserHint = [string]::Empty;
 
       if ($SaveTerminalSettings.ToBool()) {
         if ($Force.ToBool()) {
-          # Backup file
+          # Backup file (NB, WhatIf is set because the force write is not going into effect)
           #
-          Copy-Item -Path $(Resolve-Path -Path $WindowsTerminalSettingsPath) -Destination $BackupFile;
+          Copy-Item -Path $(Resolve-Path -Path $WindowsTerminalSettingsPath) -Destination $BackupFile -WhatIf;
 
-          integrateIntoSettings -Content $outputContent -SettingsPath $WindowsTerminalSettingsPath `
-            -OutputPath $WindowsTerminalSettingsPath;
+          [string]$pseudoWindowsSettingsPath = '~/Windows.Terminal.pseudo.settings.json';
+
+          # This line should be specifying $WindowsTerminalSettingsPath as the OutputPath,
+          # but this is being avoided until (if ever) a reliable way of reading and writing
+          # JSON comments is found. Until that happens, the recommended user scenario is to use
+          # SaveTerminalSettings without the Force switch and then subsquently manually copy the
+          # scehemes from the generated Dry Run file to the real Settings file.
+          #
+          $copyFromOutputUserHint = $pseudoWindowsSettingsPath;
+          combineContent -Content $outputContent -SettingsPath $WindowsTerminalSettingsPath `
+            -OutputPath $pseudoWindowsSettingsPath;
         } else {
-          integrateIntoSettings -Content $outputContent -SettingsPath $WindowsTerminalSettingsPath `
+          $copyFromOutputUserHint = $DryRunFile;
+          combineContent -Content $outputContent -SettingsPath $WindowsTerminalSettingsPath `
             -OutputPath $DryRunFile;
         }
       } else {
+        $copyFromOutputUserHint = $out;
         Set-Content -Path $Out -Value $outputContent;
+      }
+
+      if (-not([string]::IsNullOrWhiteSpace($copyFromOutputUserHint))) {
+        [System.Collections.Hashtable]$userHintTheme = Get-KrayolaTheme;
+        $userHintTheme['VALUE-COLOURS'] = @(, @('Green'));
+        [string[][]]$notice = @(, @('generated file', $copyFromOutputUserHint));
+
+        Write-ThemedPairsInColour -Pairs $notice -Theme $userHintTheme `
+          -Message 'Manual intervention notice !!!, Please open';
+
+        [string[][]]$pasteSchemes = @(, @('Windows Terminal Settings file', $WindowsTerminalSettingsPath));
+
+        Write-ThemedPairsInColour -Pairs $pasteSchemes -Theme $userHintTheme `
+          -Message 'Copy & paste "schemes" into';
       }
     }
   }

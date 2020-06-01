@@ -16,11 +16,6 @@ $WindowsTerminalSettingsPath =
 
 ConvertFrom-ItermColors -Path C:\shared\Themes\ITerm2\Favourites -SaveTerminalSettings
 
-$testTheme = Get-KrayolaTheme;
-
-Write-ThemedPairsInColour -Pairs @(, @('Windows settings file', $WindowsTerminalSettingsPath)) `
-    -Theme $testTheme -Message $message;
-
 <#
 Some notes on comments in JSON
 - There is a .net class JsonTextReader/JsonTextWriter, which supports 'extra' functionality like comments
@@ -32,3 +27,4 @@ Some notes on comments in JSON
 
 - https://docs.microsoft.com/en-us/previous-versions/dotnet/articles/bb299886(v=msdn.10)
 #>
+

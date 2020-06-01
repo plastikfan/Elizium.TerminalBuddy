@@ -48,6 +48,10 @@ function import-ItermColors {
   .SYNOPSIS
     imports XML data from iterm file and converts to JSON format.
 
+  .DESCRIPTION
+    This function behaves like a reducer, because it populates an Accumulator
+  collection for each file it is presented with.
+
   .PARAMETER $Underscore
     fileinfo object representing the .itermcolors file.
 
@@ -92,6 +96,10 @@ function import-ItermColors {
     [boolean]$Trigger
   )
 
+  # Local function handleColourComponents, given an ANSI colour (eg 'Ansi 1 Color') and
+  # a dictionary of colour definitions as real numbers, creates a hash table of the
+  # colour component name, to colour value.
+  #
   function handleColourComponents {
     [OutputType([System.Collections.Hashtable])]
     [CmdletBinding()]
@@ -121,6 +129,9 @@ function import-ItermColors {
 
     return $colourComponents;
   } # handleColourComponents
+
+  # Local function toRGB, creates the colour specification in hex code form.
+  #
   function toRGB {
     [OutputType([string])]
     param(
@@ -140,6 +151,17 @@ function import-ItermColors {
     return '#{0:X2}{1:X2}{2:X2}' -f $R, $G, $B;
   } # toRGB
 
+  # Local function buildSchemeJsonFromDocument, processes an xml document for an
+  # iterm scheme. This format is not in a form particularly helpful for xpath
+  # expressions. The key and values are all present at the same level in the
+  # xml hierachy, so there is no direct relationship between the key and the value.
+  # All we can do is make an assumption that consecutive items are bound together
+  # by the key/value relationship. So these are processed as a result of 2 xpath
+  # expressions, the first selecting the keys (/plist/dict/key) and the other
+  # selecting the values (/plist/dict/dict) and we just make the assumption that
+  # the length of both result sets are the same and that items in the same position
+  # in their result sets are bound as a key/value pair.
+  #
   function buildSchemeJsonFromDocument {
     [OutputType([string])]
     param(

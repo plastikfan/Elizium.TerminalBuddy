@@ -21,14 +21,8 @@ foreach ($folder in $functionFolders)
     }
 }
 
-# This has to be done manually, because there is no direct relationship between
-# the file name and the function name, eg "Write-ThemedPairsInColour" => write-coloured-pairs.ps1
-# Perhaps we should correct this in the future or we remove the dashes from "coloured-pairs"
-# in order to yield "ColouredPairs". If this functionality is implmented, don't forget to
-# port this back into the module plaster.
-#
-# $publicFunctions = (Get-ChildItem -Path "$PSScriptRoot/Public" -Filter '*.ps1').BaseName
-#
-# Export-ModuleMember -Function <TODO>
-# Export-ModuleMember -Variable [TODO]
-# Export-ModuleMember -Alias [TODO]
+$publicFunctions = (Get-ChildItem -Path "$PSScriptRoot/Public" -Filter '*.ps1').BaseName
+
+Export-ModuleMember -Function $publicFunctions
+Export-ModuleMember -Variable 'WindowsTerminalSettingsPath'
+Export-ModuleMember -Alias 'cfic', 'Make-WtSchemesIC'
