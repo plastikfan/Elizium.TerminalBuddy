@@ -57,7 +57,7 @@ And the caveats ...
 
 > ConvertFrom-ItermColors -Path 'C:\shared\Themes\ITerm2\Schemes\Banana Blueberry.itermcolors'  -Out ~/terminal-settings.single.output.json
 
-[single-out.banana-blueberry](resources/images/single.out.banana-blueberry.jpg)
+![picture](resources/images/single.out.banana-blueberry.jpg)
 
 Converts single file *Banana Blueberry.itermcolors* into the output file *~/terminal-settings.single.output.json*
 
@@ -65,7 +65,7 @@ Converts single file *Banana Blueberry.itermcolors* into the output file *~/term
 
 > ConvertFrom-ItermColors -Path C:\shared\Themes\ITerm2\Schemes -Filter "B*.itermcolors" -Out ~/terminal-settings.output.json
 
-[bulk-out.b-star](resources/images/bulk.out.b-star.jpg)
+![picture](resources/images/bulk.out.b-star.jpg)
 
 This converts all itermcolors files beginning with *B*, found in *C:\shared\Themes\ITerm2\Schemes* and creates an output file *~/terminal-settings.output.json* which is a JSON object with a single *schemes* property with the converted schemes.
 
@@ -75,7 +75,7 @@ This converts all itermcolors files beginning with *B*, found in *C:\shared\Them
 
 > ConvertFrom-ItermColors -Path 'C:\shared\Themes\ITerm2\Schemes\Banana Blueberry.itermcolors' -SaveTerminalSettings
 
-[single-dry-run.banana-blueberry](resources/images/single.dry-run.banana-blueberry.jpg)
+![picture](resources/images/single.dry-run.banana-blueberry.jpg)
 
 Converts single file *Banana Blueberry.itermcolors* scheme, merges into live settings file, writing to the default dry run file (*~/Windows.Terminal.dry-run.settings.json*)
 
@@ -83,7 +83,7 @@ Converts single file *Banana Blueberry.itermcolors* scheme, merges into live set
 
 > ConvertFrom-ItermColors -Path C:\shared\Themes\ITerm2\Schemes\ -Filter 'B*.itermcolors' -SaveTerminalSettings
 
-[bulk-dry-run.b-star](resources/images/bulk.dry-run.b-star.jpg)
+![picture](resources/images/bulk.dry-run.b-star.jpg)
 
 This converts all itermcolors files beginning with *B*, found in *C:\shared\Themes\ITerm2\Schemes*, merges into live settings file, writing to the default dry run file (*~/Windows.Terminal.dry-run.settings.json*)
 
@@ -93,7 +93,7 @@ This converts all itermcolors files beginning with *B*, found in *C:\shared\Them
 
 > ConvertFrom-ItermColors -Path 'C:\shared\Themes\ITerm2\Schemes\Banana Blueberry.itermcolors' -SaveTerminalSettings -Force
 
-[single-live.banana-blueberry](resources/images/single.live.banana-blueberry.jpg)
+![picture](resources/images/single.live.banana-blueberry.jpg)
 
 Converts single file *Banana Blueberry.itermcolors* scheme, merges into live settings file, (in theory overwriting live settings file), but instead writing to *~/Windows.Terminal.pseudo.settings.json*.
 
@@ -101,6 +101,6 @@ Converts single file *Banana Blueberry.itermcolors* scheme, merges into live set
 
 > ConvertFrom-ItermColors -Path C:\shared\Themes\ITerm2\Schemes\ -Filter 'B*.itermcolors' -SaveTerminalSettings -Force
 
-[bulk-live.b-star](resources/images/bulk.live.b-star)
+![picture](resources/images/bulk.live.b-star)
 
 This converts all itermcolors files beginning with *B*, found in *C:\shared\Themes\ITerm2\Schemes*, merges into live settings file, (in theory overwriting live settings file), but instead writing to *~/Windows.Terminal.pseudo.settings.json*.
