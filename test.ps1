@@ -8,6 +8,8 @@
 $WindowsTerminalSettingsPath =
   Resolve-Path -Path '~\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json'
 
+$null = $WindowsTerminalSettingsPath
+
 # $P = 'C:\tools\ColorTool\schemes'
 # $O = '~\dev\Testing\output.terminal-settings.json'
 
@@ -15,11 +17,6 @@ $WindowsTerminalSettingsPath =
 # ConvertFrom-ItermColors -Path $P -Filter 'a*.itermcolors' -SaveTerminalSettings
 
 ConvertFrom-ItermColors -Path C:\shared\Themes\ITerm2\Favourites -SaveTerminalSettings
-
-$testTheme = Get-KrayolaTheme;
-
-Write-ThemedPairsInColour -Pairs @(, @('Windows settings file', $WindowsTerminalSettingsPath)) `
-    -Theme $testTheme -Message $message;
 
 <#
 Some notes on comments in JSON
@@ -32,3 +29,4 @@ Some notes on comments in JSON
 
 - https://docs.microsoft.com/en-us/previous-versions/dotnet/articles/bb299886(v=msdn.10)
 #>
+
