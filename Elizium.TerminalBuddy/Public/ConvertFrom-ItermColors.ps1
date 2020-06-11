@@ -105,7 +105,6 @@ function ConvertFrom-ItermColors {
     [switch]$Force,
 
     [Parameter(Mandatory = $false)]
-    [AllowEmptyString()]
     [string]$DryRunFile = '~/Windows.Terminal.dry-run.settings.json',
 
     [Parameter(Mandatory = $false)]
@@ -114,104 +113,14 @@ function ConvertFrom-ItermColors {
 
     [Parameter(Mandatory = $false)]
     [AllowEmptyString()]
-    [string]
-    $ThemeName
+    [string]$ThemeName,
+
+    [Parameter(Mandatory = $false)]
+    [string]$LiveSettingsFile = $WindowsTerminalSettingsPath,
+
+    [Parameter(Mandatory = $false)]
+    [string]$PseudoSettingsFile = '~/Windows.Terminal.pseudo.settings.json'
   )
-
-  # Local function composeAll, builds the json content representing all the schemes
-  # previously collated.
-  #
-  function composeAll {
-    [OutputType([string])]
-    param(
-      [Parameter()]
-      [System.Collections.Hashtable]$Schemes
-    )
-
-    [string]$outputContent = '{ "schemes": [';
-    [string]$close = '] }';
-
-    [System.Collections.IDictionaryEnumerator]$enumerator = $Schemes.GetEnumerator();
-
-    if ($Schemes.Count -gt 0) {
-      while ($enumerator.MoveNext()) {
-        [System.Collections.DictionaryEntry]$entry = $enumerator.Current;
-        [string]$themeFragment = $entry.Value;
-        $outputContent += ($themeFragment + ',');
-      }
-
-      [int]$last = $outputContent.LastIndexOf(',');
-      $outputContent = $outputContent.Substring(0, $last);
-    }
-
-    $outputContent += $close;
-    $outputContent = $outputContent | ConvertTo-Json | ConvertFrom-Json;
-
-    return $outputContent;
-  } # composeAll
-
-  # Local function containsScheme, predicate that returns true if SchemeName is present
-  # in the Schemes collection.
-  #
-  function containsScheme {
-    [OutputType([boolean])]
-    param(
-      [Parameter()]
-      [string]$SchemeName,
-
-      [Parameter()]
-      [object[]]$Schemes
-    )
-
-    $found = $Schemes | Where-Object { $_.name -eq $SchemeName };
-
-    return ($null -ne $found);
-  } # containsScheme
-
-  # Local function combineContent, combines the new Content just generated with
-  # the existing Settings file.
-  function combineContent {
-    param(
-      [Parameter()]
-      [string]$Content,
-
-      [Parameter()]
-      [string]$SettingsPath,
-
-      [Parameter()]
-      [string]$OutputPath
-    )
-
-    [string]$settingsContentRaw = Get-Content -Path $SettingsPath -Raw;
-    [PSCustomObject]$settingsObject = [PSCustomObject] ($settingsContentRaw | ConvertFrom-Json);
-    $settingsSchemes = $settingsObject.schemes;
-    [PSCustomObject]$contentObject = [PSCustomObject] ($Content | ConvertFrom-Json)
-
-    [System.Collections.ArrayList]$integratedSchemes = New-Object `
-      -TypeName System.Collections.ArrayList -ArgumentList @(, $settingsSchemes);
-
-    [System.Collections.Hashtable]$integrationTheme = Get-KrayolaTheme;
-    $integrationTheme['VALUE-COLOURS'] = @(, @('Blue'));
-
-    [System.Collections.Hashtable]$skippingTheme = Get-KrayolaTheme;
-    $skippingTheme['VALUE-COLOURS'] = @(, @('Red'));
-
-    foreach ($sch in $contentObject.schemes) {
-      [string[][]]$pairs = @(, @('Scheme name', $sch.name));
-      if (-not(containsScheme -SchemeName $sch.name -Schemes $settingsSchemes)) {
-        Write-ThemedPairsInColour -Pairs $pairs -Theme $integrationTheme `
-          -Message 'Integrating new theme';
-        $null = $integratedSchemes.Add($sch);
-      } else {
-        Write-ThemedPairsInColour -Pairs $pairs -Theme $skippingTheme `
-          -Message 'Skipping existing theme';
-      }
-    }
-
-    $settingsObject.schemes = ($integratedSchemes | Sort-Object -Property name);
-
-    Set-Content -Path $OutputPath -Value $($settingsObject | ConvertTo-Json);
-  } # combineContent
 
   [scriptblock]$containsXML = {
     # Not making assumption about suffix of the specfied source file(s), since
@@ -260,7 +169,7 @@ function ConvertFrom-ItermColors {
     [System.Collections.Hashtable]$accumulator = $passThru['ACCUMULATOR'];
 
     if ($accumulator) {
-      [string]$outputContent = composeAll -Schemes $accumulator;
+      [string]$outputContent = join-AllSchemas -Schemes $accumulator;
 
       [string]$copyFromOutputUserHint = [string]::Empty;
 
@@ -268,9 +177,7 @@ function ConvertFrom-ItermColors {
         if ($Force.ToBool()) {
           # Backup file (NB, WhatIf is set because the force write is not going into effect)
           #
-          Copy-Item -Path $(Resolve-Path -Path $WindowsTerminalSettingsPath) -Destination $BackupFile -WhatIf;
-
-          [string]$pseudoWindowsSettingsPath = '~/Windows.Terminal.pseudo.settings.json';
+          Copy-Item -Path $(Resolve-Path -Path $LiveSettingsFile) -Destination $BackupFile -WhatIf;
 
           # This line should be specifying $WindowsTerminalSettingsPath as the OutputPath,
           # but this is being avoided until (if ever) a reliable way of reading and writing
@@ -278,12 +185,12 @@ function ConvertFrom-ItermColors {
           # SaveTerminalSettings without the Force switch and then subsquently manually copy the
           # scehemes from the generated Dry Run file to the real Settings file.
           #
-          $copyFromOutputUserHint = $pseudoWindowsSettingsPath;
-          combineContent -Content $outputContent -SettingsPath $WindowsTerminalSettingsPath `
-            -OutputPath $pseudoWindowsSettingsPath;
+          $copyFromOutputUserHint = $PseudoSettingsFile;
+          merge-SettingsContent -Content $outputContent -SettingsPath $LiveSettingsFile `
+            -OutputPath $PseudoSettingsFile;
         } else {
           $copyFromOutputUserHint = $DryRunFile;
-          combineContent -Content $outputContent -SettingsPath $WindowsTerminalSettingsPath `
+          merge-SettingsContent -Content $outputContent -SettingsPath $LiveSettingsFile `
             -OutputPath $DryRunFile;
         }
       } else {
@@ -299,7 +206,7 @@ function ConvertFrom-ItermColors {
         Write-ThemedPairsInColour -Pairs $notice -Theme $userHintTheme `
           -Message 'Manual intervention notice !!!, Please open';
 
-        [string[][]]$pasteSchemes = @(, @('Windows Terminal Settings file', $WindowsTerminalSettingsPath));
+        [string[][]]$pasteSchemes = @(, @('Windows Terminal Settings file', $LiveSettingsFile));
 
         Write-ThemedPairsInColour -Pairs $pasteSchemes -Theme $userHintTheme `
           -Message 'Copy & paste "schemes" into';

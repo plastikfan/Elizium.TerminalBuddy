@@ -165,8 +165,8 @@ function import-ItermColors {
   function buildSchemeJsonFromDocument {
     [OutputType([string])]
     param(
-      [Parameter()]
-      [string]$ThemeName,
+      # [Parameter()]
+      # [string]$ThemeName,
 
       [Parameter()]
       [System.Xml.XmlDocument]$XmlDocument
@@ -221,8 +221,8 @@ function import-ItermColors {
   [System.Xml.XmlDocument]$document = [xml]@(Get-Content -Path $Underscore.Fullname);
 
   if ($document) {
-    [string]$terminalTheme = buildSchemeJsonFromDocument -ThemeName `
-      $Underscore.Name -XmlDocument $document;
+    # -ThemeName $Underscore.Name
+    [string]$terminalTheme = buildSchemeJsonFromDocument -XmlDocument $document;
 
     if (-not([string]::IsNullOrWhiteSpace($terminalTheme))) {
       $result | Add-Member -MemberType NoteProperty -Name 'Trigger' -Value $true;
