@@ -165,9 +165,6 @@ function import-ItermColors {
   function buildSchemeJsonFromDocument {
     [OutputType([string])]
     param(
-      # [Parameter()]
-      # [string]$ThemeName,
-
       [Parameter()]
       [System.Xml.XmlDocument]$XmlDocument
     )
@@ -221,7 +218,6 @@ function import-ItermColors {
   [System.Xml.XmlDocument]$document = [xml]@(Get-Content -Path $Underscore.Fullname);
 
   if ($document) {
-    # -ThemeName $Underscore.Name
     [string]$terminalTheme = buildSchemeJsonFromDocument -XmlDocument $document;
 
     if (-not([string]::IsNullOrWhiteSpace($terminalTheme))) {
