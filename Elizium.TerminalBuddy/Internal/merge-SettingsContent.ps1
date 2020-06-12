@@ -1,7 +1,7 @@
 function merge-SettingsContent {
   <#
   .NAME
-    merge-Content
+    merge-SettingsContent
 
   .SYNOPSIS
     combines the new Content just generated with the existing Settings file.

@@ -18,6 +18,12 @@ $script:PublicFolder = 'Public'
 $script:DSCResourceFolder = 'DSCResources'
 
 $script:SourcePsdPath = Join-Path -Path $PSScriptRoot -ChildPath "$($script:ModuleName).psd1"
+$script:TestHelpers = "$PSScriptRoot/TestHelpers"
+
+if (Test-Path -Path $script:TestHelpers) {
+  $helpers = Get-ChildItem -Path $script:TestHelpers -Recurse -File -Filter '*.ps1';
+  $helpers | ForEach-Object { Write-Verbose "sourcing helper $_"; . $_; }
+}
 
 task Clean {
   if (-not(Test-Path $script:OutPutFolder)) {
@@ -114,7 +120,7 @@ task Pester {
   $configuration.TestResult.Enabled = $true
   $configuration.TestResult.OutputFormat = 'NUnitxml'
   $configuration.TestResult.OutputPath = $resultFile;
-
+  $configuration.Filter.Tag = 'CURRENT'
   Invoke-Pester -Configuration $configuration
 }
 
