@@ -1,7 +1,7 @@
 Describe 'ConvertFrom-ItermColors' {
   BeforeAll {
     Get-Module Elizium.TerminalBuddy | Remove-Module
-    Import-Module .\Elizium.TerminalBuddy\Output\Elizium.TerminalBuddy\Elizium.TerminalBuddy.psm1 `
+    Import-Module .\Output\Elizium.TerminalBuddy\Elizium.TerminalBuddy.psm1 `
       -ErrorAction 'stop' -DisableNameChecking
   }
 
