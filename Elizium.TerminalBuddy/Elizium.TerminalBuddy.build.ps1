@@ -120,7 +120,7 @@ task Pester {
   $configuration.TestResult.Enabled = $true
   $configuration.TestResult.OutputFormat = 'NUnitxml'
   $configuration.TestResult.OutputPath = $resultFile;
-  $configuration.Filter.Tag = 'CURRENT'
+  # $configuration.Filter.Tag = 'CURRENT'
   Invoke-Pester -Configuration $configuration
 }
 
