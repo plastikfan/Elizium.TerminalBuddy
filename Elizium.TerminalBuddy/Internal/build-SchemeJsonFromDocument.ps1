@@ -63,8 +63,8 @@ function build-SchemeJsonFromDocument {
 
   # Get the top level dictionary (/dict)
   #
-  $colourKeys = Select-Xml -Xml $document -XPath '/plist/dict/key';
-  $colourDict = Select-Xml -Xml $document -XPath '/plist/dict/dict';
+  $colourKeys = Select-Xml -Xml $XmlDocument -XPath '/plist/dict/key';
+  $colourDict = Select-Xml -Xml $XmlDocument -XPath '/plist/dict/dict';
 
   [int]$colourIndex = 0;
   if ($colourKeys.Count -eq $colourDict.Count) {
@@ -76,8 +76,7 @@ function build-SchemeJsonFromDocument {
       $colourDetails = $colourDict[$colourIndex];
       [string]$colourName = $k.Node.InnerText;
 
-      [System.Collections.Hashtable]$kols = convertFrom-ColourComponents -AnsiColour $k `
-        -ColourDictionary $colourDetails;
+      [System.Collections.Hashtable]$kols = convertFrom-ColourComponents -ColourDictionary $colourDetails;
       [string]$colourHash = ConvertTo-RGB -Components $kols;
       $colourIndex++;
 

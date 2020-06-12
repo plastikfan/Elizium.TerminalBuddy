@@ -7,9 +7,6 @@ function convertFrom-ColourComponents {
   [CmdletBinding()]
   param (
     [Parameter()]
-    [Microsoft.PowerShell.Commands.SelectXmlInfo]$AnsiColour,
-
-    [Parameter()]
     [Microsoft.PowerShell.Commands.SelectXmlInfo]$ColourDictionary
   )
 
