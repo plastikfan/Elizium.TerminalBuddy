@@ -29,8 +29,8 @@ Describe 'ConvertFrom-ItermColors' {
         $result = Get-Content -Path $outputPath | ConvertFrom-Json;
         $result.schemes | Should -Not -BeNullOrEmpty;
         $result.schemes.Count | Should -Be 2;
-        $bananaBlueberry = $result.schemes[0];
-        $bananaBlueberry.name | Should -Be "Banana Blueberry";
+        $bananaBlueberry = $result.schemes | Where-Object { $_.name -eq 'Banana Blueberry' }
+        $bananaBlueberry.name | Should -Not -BeNullOrEmpty;
       }
     }
   } # Out file mode
