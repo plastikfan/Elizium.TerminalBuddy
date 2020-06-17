@@ -67,7 +67,7 @@
   [System.Xml.XmlDocument]$document = [xml]@(Get-Content -Path $Underscore.Fullname);
 
   if ($document) {
-    [string]$terminalTheme = build-SchemeJsonFromDocument -XmlDocument $document;
+    [string]$terminalTheme = new-SchemeJsonFromDocument -XmlDocument $document;
 
     if (-not([string]::IsNullOrWhiteSpace($terminalTheme))) {
       $result | Add-Member -MemberType NoteProperty -Name 'Trigger' -Value $true;

@@ -2,7 +2,7 @@
 function convertFrom-ColourComponents {
   <#
   .NAME
-    build-SchemeJsonFromDocument
+    convertFrom-ColourComponents
 
   .DESCRIPTION
     Local function convertFrom-ColourComponents, given an ANSI colour

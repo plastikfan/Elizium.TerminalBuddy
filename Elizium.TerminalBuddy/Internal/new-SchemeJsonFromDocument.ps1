@@ -33,17 +33,17 @@
   # Badge Color
 }
 
-function build-SchemeJsonFromDocument {
+function new-SchemeJsonFromDocument {
   <#
   .NAME
-    build-SchemeJsonFromDocument
+    new-SchemeJsonFromDocument
 
   .SYNOPSIS
     builds the json content representing all the schemes previously collated.
     (used by ConvertFrom-ItermColors)
 
   .DESCRIPTION
-    Local function build-SchemeJsonFromDocument, processes an xml document for an
+    Local function new-SchemeJsonFromDocument, processes an xml document for an
     iterm scheme. This format is not in a form particularly helpful for xpath
     expressions. The key and values are all present at the same level in the
     xml hierachy, so there is no direct relationship between the key and the value.
@@ -99,4 +99,4 @@ function build-SchemeJsonFromDocument {
 
     return $jsonColourScheme;
   }
-} # build-SchemeJsonFromDocument
+} # new-SchemeJsonFromDocument
