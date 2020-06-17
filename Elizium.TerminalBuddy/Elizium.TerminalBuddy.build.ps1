@@ -154,5 +154,5 @@ task ApplyFix {
 
 task Docs {
   New-ExternalHelp $script:ModuleRoot\docs `
-    -OutputPath $script:OutPutFolder\Elizium.TerminalBuddy\en-GB
+    -OutputPath $script:OutPutFolder\$script:ModuleName\en-GB
 }
