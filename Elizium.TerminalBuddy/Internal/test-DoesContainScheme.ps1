@@ -5,13 +5,15 @@ function test-DoesContainScheme {
     test-DoesContainScheme
 
   .SYNOPSIS
-    predicate that returns true if SchemeName is present in the Schemes collection;
-    (used by ConvertFrom-ItermColors)
+    Predicate that returns true if SchemeName is present in the Schemes collection.
 
-  .PARAMETER $SchemeName
-    Name of the scheme to search for
+  .DESCRIPTION
+    Used by ConvertFrom-ItermColors.
 
-  .PARAMETER $Schemes
+  .PARAMETER SchemeName
+    Name of the scheme to search for.
+
+  .PARAMETER Schemes
     0 based numeric index specifing the ordinal of the iterated target.
 
   .OUTPUTS

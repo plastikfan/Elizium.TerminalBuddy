@@ -1,14 +1,19 @@
 
 function convertFrom-ColourComponents {
   <#
-  .NAME
-    convertFrom-ColourComponents
+  .NAME convertFrom-ColourComponents
+
+  .SYNOPSIS
+    Convert colour components from raw real to numerics representation
+    (ie the number value prior to hex conversion).
 
   .DESCRIPTION
-    Local function convertFrom-ColourComponents, given an ANSI colour
-    (eg 'Ansi 1 Color') and a dictionary of colour definitions as real
-    numbers, creates a hash table of the colour component name, to colour
-    value.
+    Given an ANSI colour (eg 'Ansi 1 Color') and a dictionary of colour
+    definitions as real numbers, creates a hash table of the colour
+    component name, to colour value.
+
+  .PARAMETER ColourDictionary
+    XML info representing the colour components for a single ansi colour.
 
   .OUTPUTS
     [Hastable]

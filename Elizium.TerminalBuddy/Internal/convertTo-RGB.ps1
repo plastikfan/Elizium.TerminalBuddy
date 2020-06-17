@@ -7,11 +7,22 @@
 
 function ConvertTo-RGB {
   <#
-  .NAME
-    ConvertTo-RGB
+  .NAME ConvertTo-RGB
 
   .SYNOPSIS
-    creates the colour specification in hex code form.
+    Creates the colour specification in hex code form.
+
+  .DESCRIPTION
+    The Hex string generated represents the string value supported by
+  Windows Terminal that allows rendering in that colour.
+
+  .PARAMETER Components
+    Hashtable containing colour component descriptor mapped to the
+  real colour value.
+
+  .PARAMETER NamingScheme
+    Mapping scheme that decouples external colour component names
+  from internal names (not of interest to end user).
 
   .OUTPUTS
   [string]

@@ -1,3 +1,4 @@
+
 [System.Collections.Hashtable]$script:ItermTerminalColourMap = @{
   # As defined in https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
   #
@@ -35,12 +36,10 @@
 
 function new-SchemeJsonFromDocument {
   <#
-  .NAME
-    new-SchemeJsonFromDocument
+  .NAME new-SchemeJsonFromDocument
 
   .SYNOPSIS
-    builds the json content representing all the schemes previously collated.
-    (used by ConvertFrom-ItermColors)
+    Builds the json content representing all the schemes previously collated.
 
   .DESCRIPTION
     Local function new-SchemeJsonFromDocument, processes an xml document for an
@@ -52,7 +51,10 @@ function new-SchemeJsonFromDocument {
     expressions, the first selecting the keys (/plist/dict/key) and the other
     selecting the values (/plist/dict/dict) and we just make the assumption that
     the length of both result sets are the same and that items in the same position
-    in their result sets are bound as a key/value pair.
+    in their result sets are bound as a key/value pair. Used by ConvertFrom-ItermColors.
+
+  .PARAMETER XmlDocument
+    The XML document.
 
   .OUTPUTS
   [string]
@@ -60,6 +62,8 @@ function new-SchemeJsonFromDocument {
   #>
   [OutputType([string])]
   [CmdletBinding()]
+  [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangeingFunctions', '',
+    Justification='Cant use verb "build" so used new instead', Scope='Function')]
   param(
     [Parameter()]
     [System.Xml.XmlDocument]$XmlDocument

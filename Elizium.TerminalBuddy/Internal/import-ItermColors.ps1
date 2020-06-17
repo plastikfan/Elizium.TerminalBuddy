@@ -1,10 +1,9 @@
 ﻿function import-ItermColors {
   <#
-  .NAME
-    import-ItermColors
+  .NAME import-ItermColors
 
   .SYNOPSIS
-    imports XML data from iterm file and converts to JSON format.
+    Imports XML data from iterm file and converts to JSON format.
 
   .DESCRIPTION
     This function behaves like a reducer, because it populates an Accumulator
@@ -23,6 +22,7 @@
   into the 'schemes' array field in the settings file.
 
   .PARAMETER Trigger
+    Trigger.
 
   .OUTPUTS
     [PSCustomObject]

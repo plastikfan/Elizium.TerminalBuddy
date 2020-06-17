@@ -46,38 +46,55 @@ function ConvertFrom-ItermColors {
       2) ConvertFrom-Json/Converto-Json do not properly handle the profiles
 
   .PARAMETER Path
-    The parent directory to iterate
+    The path containing the iterm scheme files. If this refers to a directory, then a Filter
+  should be specified to identify the files. This Path can also just refer directly to an
+  individual file, in which case, no Filter is required.
 
   .PARAMETER Filter
-    The filter to apply to Get-ChildItem
+    When Path refers to a directory, use Filter to specify files. A * can be used
+    as a wildcard.
 
-  .PARAMETER Out
+  .PARAMETER Out    When Path refers to a directory, use Filter to specify files. A * can be used
+    as a wildcard.
     The output file written to with the JSON represented the converted iterm themes. This
     content is is just a fragment of the settings file, in fact it's a JSON object which
     contains a single member named 'schemes' (after the corresponding entry in the
     Windows Terminal Settings file.) which is set to an array of scheme objects.
 
   .PARAMETER SaveTerminalSettings
-    switch, to indcate that the converted schemes should be saved into a complete settings
-    file. Which settings file depends on the presence of the Force paramter, which
+    Switch, to indicate that the converted schemes should be saved into a complete settings
+    file. Which settings file depends on the presence of the Force parameter. If Force is
+    present, the the LiveSettingsFile path is used, otherwise the DryRunFile path is used.
 
   .PARAMETER Force
-    switch to indicate whether live settings should be modified to include generated schemes.
+    Switch to indicate whether live settings should be modified to include generated schemes.
     To avoid accidental invocation, needs to be used in addition to SaveTerminalSettings.
 
+  .PARAMETER LiveSettingsFile
+    Well known path to the current windows terminal settings file. This is assumed to of
+    the well known path. This can be overridden by the user if so required (just in case it's
+    located elsewhere).
+
   .PARAMETER DryRunFile
-    When run in Dry Run mode (by default), this is the path of the file written to conatain
-    the current Windows Terminal Settings file with newly generated schemes as converted
-    from iterm files specified by the $Path.
+    When run in Dry Run mode (by default), this is the path of the file written to.
+    It will contain a merge of the current Windows Terminal Settings file and newly generated
+    schemes as converted from iterm files specified by the $Path.
 
   .PARAMETER BackupFile
-    When not in Dry Run mode ($Force and $SaveTerminalSettings specified), this paramter
+    When not in Dry Run mode ($Force and $SaveTerminalSettings specified), this parameter
     specifies the path to backup the live Windows Terminal Settings file to.
 
   .PARAMETER ThemeName
     The name of a Krayola Theme, that has been configured inside the global $KrayolaThemes
     hashtable variable. If not present, then an internal theme is used. The Krayola Theme
-    shapes how output of this command is generated to the consle.
+    shapes how output of this command is generated to the console.
+
+  .PARAMETER PseudoSettingsFile
+    This file is only required because of certain caveats of the current implementation, owing
+    to Microsoft's choice in not using standard JSON file. In the interests of safety, instead
+    of integrating new schemes into the LiveSettingsFile, PseudoSettingsFile specifies the file
+    used instead of overwriting LiveSettingsFile. This function will indicating that the schemes
+    should be manually copied over at the end of the run.
 
   .EXAMPLE
     ConvertFrom-ItermColors -Path 'C:\shared\Themes\ITerm2\Schemes\Banana Blueberry.itermcolors'

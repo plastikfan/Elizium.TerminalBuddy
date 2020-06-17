@@ -1,11 +1,12 @@
 ﻿function join-AllSchemas {
   <#
-  .NAME
-    join-AllSchemas
+  .NAME join-AllSchemas
 
   .SYNOPSIS
-    builds the json content representing all the schemes previously collated.
-    (used by ConvertFrom-ItermColors)
+    Builds the json content representing all the schemes previously collated.
+
+  .DESCRIPTION
+    Used by ConvertFrom-ItermColors.
 
   .PARAMETER Schemes
     Hastable of scheme names to their JSON string representations.

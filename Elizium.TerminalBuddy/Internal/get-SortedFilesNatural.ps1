@@ -1,18 +1,17 @@
 ﻿
 function get-SortedFilesNatural {
 <#
-.NAME
-  get-SortedFilesNatural
+.NAME get-SortedFilesNatural
 
 .SYNOPSIS
-  Sort a collection of files from the pipeline in natural order
+  Sort a collection of files from the pipeline in natural order.
 
 .DESCRIPTION
   Sorts filenames in an order that makes sense to humans; ie 1 is followed by
 	2 and not 10.
 
-.PARAMETER Pipeline
-  collection of files from pipeline to be sorted
+.PARAMETER InputObject
+  Collection of files from pipeline to be sorted.
 
 .EXAMPLE
   PS C:\> Get-SortedFolderNatural 'E:\Uni\audio'
@@ -28,13 +27,13 @@ function get-SortedFilesNatural {
       ValueFromPipeline = $true,
       ValueFromPipelineByPropertyName = $true
     )]
-    [System.Object[]]$Pipeline
+    [System.Object[]]$InputObject
   )
 
   begin { $files = @() }
 
   process {
-    foreach ($item in $Pipeline) {
+    foreach ($item in $InputObject) {
       $files += $item
     }
   }

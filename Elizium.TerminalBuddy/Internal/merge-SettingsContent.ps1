@@ -1,21 +1,21 @@
 ﻿function merge-SettingsContent {
   <#
-  .NAME
-    merge-SettingsContent
+  .NAME merge-SettingsContent
 
   .SYNOPSIS
-    combines the new Content just generated with the existing Settings file.
-    (used by ConvertFrom-ItermColors)
+    Combines the new Content just generated with the existing Settings file.
+
+  .DESCRIPTION
+    Used by ConvertFrom-ItermColors.
 
   .PARAMETER Content
-    The new settings content to merge
+    The new settings content to merge.
 
   .PARAMETER SettingsPath
-    The path to the settings file
+    The path to the settings file.
 
   .PARAMETER OutputPath
-    The path to write result to
-
+    The path to write the result to.
   #>
 
   param(
