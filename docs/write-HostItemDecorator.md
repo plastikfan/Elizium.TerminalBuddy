@@ -30,7 +30,7 @@ where output is not required.
 
 ### -Index
 
-0 based numeric index specifing the ordinal of the iterated target.
+0 based numeric index specifying the ordinal of the iterated target.
 
 ```yaml
 Type: Int32

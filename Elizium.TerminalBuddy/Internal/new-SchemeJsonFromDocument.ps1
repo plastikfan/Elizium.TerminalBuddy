@@ -45,7 +45,7 @@ function new-SchemeJsonFromDocument {
     Local function new-SchemeJsonFromDocument, processes an xml document for an
     iterm scheme. This format is not in a form particularly helpful for xpath
     expressions. The key and values are all present at the same level in the
-    xml hierachy, so there is no direct relationship between the key and the value.
+    xml hierarchy, so there is no direct relationship between the key and the value.
     All we can do is make an assumption that consecutive items are bound together
     by the key/value relationship. So these are processed as a result of 2 xpath
     expressions, the first selecting the keys (/plist/dict/key) and the other

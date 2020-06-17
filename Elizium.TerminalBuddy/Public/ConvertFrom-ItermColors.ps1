@@ -1,6 +1,8 @@
 ﻿
 function ConvertFrom-ItermColors {
   <#
+  .EXTERNALHELP Elizium.TerminalBuddy-help.xml
+
   .NAME
     ConvertFrom-ItermColors
 

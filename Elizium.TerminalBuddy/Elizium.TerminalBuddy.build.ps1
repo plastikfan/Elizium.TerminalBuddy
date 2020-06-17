@@ -6,6 +6,7 @@ task Build Compile, CreateManifest, Ana
 task Stats RemoveStats, WriteStats
 task Ana Analyse
 task Fix ApplyFix
+task BuildHelp Docs
 
 $script:ModuleName = Split-Path -Path $PSScriptRoot -Leaf
 $script:ModuleRoot = $PSScriptRoot
@@ -149,4 +150,9 @@ task Analyse {
 
 task ApplyFix {
   Invoke-ScriptAnalyzer -Path .\ -Recurse -Fix
+}
+
+task Docs {
+  New-ExternalHelp $script:ModuleRoot\docs `
+    -OutputPath $script:OutPutFolder\Elizium.TerminalBuddy\en-GB
 }

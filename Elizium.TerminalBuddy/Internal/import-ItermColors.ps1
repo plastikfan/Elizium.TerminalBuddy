@@ -13,7 +13,7 @@
     fileinfo object representing the .itermcolors file.
 
   .PARAMETER Index
-    0 based numeric index specifing the ordinal of the file in the batch.
+    0 based numeric index specifying the ordinal of the file in the batch.
 
   .PARAMETER PassThru
     The dictionary object containing additional parameters. Also used by

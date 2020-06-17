@@ -19,7 +19,7 @@ function write-HostItemDecorator {
     The iterated target item provided by the parent iterator function.
 
   .PARAMETER Index
-    0 based numeric index specifing the ordinal of the iterated target.
+    0 based numeric index specifying the ordinal of the iterated target.
 
   .PARAMETER PassThru
     The dictionary object used to pass parameters to the decorated scriptblock

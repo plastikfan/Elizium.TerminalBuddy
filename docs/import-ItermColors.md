@@ -27,7 +27,7 @@ collection for each file it is presented with.
 
 ### -Index
 
-0 based numeric index specifing the ordinal of the file in the batch.
+0 based numeric index specifying the ordinal of the file in the batch.
 
 ```yaml
 Type: Int32
