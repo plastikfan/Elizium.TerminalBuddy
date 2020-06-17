@@ -14,7 +14,8 @@ function test-DoesContainScheme {
   .PARAMETER $Schemes
     0 based numeric index specifing the ordinal of the iterated target.
 
-  .RETURNS
+  .OUTPUTS
+  [boolean]
     true if Schemes contains SchemeName, false otherwise
   #>
   [OutputType([boolean])]

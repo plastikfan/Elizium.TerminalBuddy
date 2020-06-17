@@ -1,12 +1,23 @@
 
-[System.Collections.Hashtable]$ComponentNamingScheme = @{
+[System.Collections.Hashtable]$script:ComponentNamingScheme = @{
   'RED_C'   = 'Red Component';
   'GREEN_C' = 'Green Component';
   'BLUE_C'  = 'Blue Component';
 }
-# Local function ConvertTo-RGB, creates the colour specification in hex code form.
-#
+
 function ConvertTo-RGB {
+  <#
+  .NAME
+    ConvertTo-RGB
+
+  .SYNOPSIS
+    creates the colour specification in hex code form.
+
+  .OUTPUTS
+  [string]
+  Windows terminal compatible Hex string representation of the converted
+  RGB values
+  #>
   [OutputType([string])]
   param(
     [Parameter()]

@@ -1,4 +1,4 @@
-function join-AllSchemas {
+﻿function join-AllSchemas {
   <#
   .NAME
     join-AllSchemas
@@ -7,7 +7,13 @@ function join-AllSchemas {
     builds the json content representing all the schemes previously collated.
     (used by ConvertFrom-ItermColors)
 
-  .DESCRIPTION
+  .PARAMETER Schemes
+    Hastable of scheme names to their JSON string representations.
+
+  .OUTPUTS
+  [string]
+  JSON string reprentation of all built schemas as members of the schemes
+  array property.
   #>
 
   [OutputType([string])]

@@ -45,39 +45,55 @@ function ConvertFrom-ItermColors {
     but using these functions yield unsatisfactory results.
       2) ConvertFrom-Json/Converto-Json do not properly handle the profiles
 
-  .PARAMETER $Path
+  .PARAMETER Path
     The parent directory to iterate
 
-  .PARAMETER $Filter
+  .PARAMETER Filter
     The filter to apply to Get-ChildItem
 
-  .PARAMETER $Out
+  .PARAMETER Out
     The output file written to with the JSON represented the converted iterm themes. This
     content is is just a fragment of the settings file, in fact it's a JSON object which
     contains a single member named 'schemes' (after the corresponding entry in the
     Windows Terminal Settings file.) which is set to an array of scheme objects.
 
-  .PARAMETER $SaveTerminalSettings
+  .PARAMETER SaveTerminalSettings
     switch, to indcate that the converted schemes should be saved into a complete settings
     file. Which settings file depends on the presence of the Force paramter, which
 
-  .PARAMETER $Force
+  .PARAMETER Force
     switch to indicate whether live settings should be modified to include generated schemes.
     To avoid accidental invocation, needs to be used in addition to SaveTerminalSettings.
 
-  .PARAMETER $DryRunFile
+  .PARAMETER DryRunFile
     When run in Dry Run mode (by default), this is the path of the file written to conatain
     the current Windows Terminal Settings file with newly generated schemes as converted
     from iterm files specified by the $Path.
 
-  .PARAMETER $BackupFile
+  .PARAMETER BackupFile
     When not in Dry Run mode ($Force and $SaveTerminalSettings specified), this paramter
     specifies the path to backup the live Windows Terminal Settings file to.
 
-  .PARAMETER $ThemeName
+  .PARAMETER ThemeName
     The name of a Krayola Theme, that has been configured inside the global $KrayolaThemes
     hashtable variable. If not present, then an internal theme is used. The Krayola Theme
     shapes how output of this command is generated to the consle.
+
+  .EXAMPLE
+    ConvertFrom-ItermColors -Path 'C:\shared\Themes\ITerm2\Schemes\Banana Blueberry.itermcolors'
+      -Out ~/terminal-settings.single.output.json
+
+  .EXAMPLE
+    ConvertFrom-ItermColors -Path C:\shared\Themes\ITerm2\Schemes -Filter "B*.itermcolors"
+      -Out ~/terminal-settings.output.json
+
+  .EXAMPLE
+    ConvertFrom-ItermColors -Path 'C:\shared\Themes\ITerm2\Schemes\Banana Blueberry.itermcolors'
+      -SaveTerminalSettings
+
+  .EXAMPLE
+    ConvertFrom-ItermColors -Path C:\shared\Themes\ITerm2\Schemes\ -Filter 'B*.itermcolors'
+      -SaveTerminalSettings
   #>
 
   [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]

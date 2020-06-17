@@ -1,4 +1,4 @@
-[System.Collections.Hashtable]$ItermTerminalColourMap = @{
+[System.Collections.Hashtable]$script:ItermTerminalColourMap = @{
   # As defined in https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
   #
   'Ansi 0 Color'      = 'black';
@@ -53,9 +53,13 @@ function build-SchemeJsonFromDocument {
     selecting the values (/plist/dict/dict) and we just make the assumption that
     the length of both result sets are the same and that items in the same position
     in their result sets are bound as a key/value pair.
-  #>
 
+  .OUTPUTS
+  [string]
+  The JSON string representation of the scheme generated from the iterm document.
+  #>
   [OutputType([string])]
+  [CmdletBinding()]
   param(
     [Parameter()]
     [System.Xml.XmlDocument]$XmlDocument

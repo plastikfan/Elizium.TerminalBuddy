@@ -8,10 +8,10 @@ function invoke-ForeachFile {
     Performs iteration over a collection of files which are children of the directory
     specified by the caller.
 
-  .PARAMETER $Path
+  .PARAMETER Path
     The parent directory to iterate
 
-  .PARAMETER $Body
+  .PARAMETER Body
     The implementation script block that is to be implemented for each child file. The
     script block can either return $null or a PSCustomObject with fields Message(string) giving an
     indication of what was implemented, Product (string) which represents the item in question
@@ -21,27 +21,27 @@ function invoke-ForeachFile {
     operation doesnt do anything to any of the files, then the whole operation should be considered
     a no-op, so we can keep output to a minimum.
 
-  .PARAMETER $PassThru
+  .PARAMETER PassThru
     The dictionary object used to pass parameters to the $Body scriptblock provided.
 
-  .PARAMETER $Filter
+  .PARAMETER Filter
     The filter to apply to Get-ChildItem
 
-  .PARAMETER $OnSummary
+  .PARAMETER OnSummary
     A scriptblock that is invoked at the end of processing all processed files.
     (This still needs review; ie what can this provide that can't be as a result of
     invoking after calling invoke-ForeachFile)
 
-  .PARAMETER $Condition
+  .PARAMETER Condition
     The result of Get-ChildItem is piped to a where statement whose condition is specified by
     this parameter. The (optional) scriptblock specified must be a predicate.
 
-  .PARAMETER $Inclusion
+  .PARAMETER Inclusion
     Value that needs to be passed in into Get-ChildItem to additionally specify files
     in the include list.
 
-  .RETURNS
-    Number of files found.
+  .OUTPUTS
+    The collection of files iterated over.
   #>
 
   [CmdletBinding()]

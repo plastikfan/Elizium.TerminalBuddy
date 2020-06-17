@@ -1,8 +1,19 @@
-# Local function convertFrom-ColourComponents, given an ANSI colour (eg 'Ansi 1 Color') and
-# a dictionary of colour definitions as real numbers, creates a hash table of the
-# colour component name, to colour value.
-#
+
 function convertFrom-ColourComponents {
+  <#
+  .NAME
+    build-SchemeJsonFromDocument
+
+  .DESCRIPTION
+    Local function convertFrom-ColourComponents, given an ANSI colour
+    (eg 'Ansi 1 Color') and a dictionary of colour definitions as real
+    numbers, creates a hash table of the colour component name, to colour
+    value.
+
+  .OUTPUTS
+    [Hastable]
+    Maps from component colour name and converted colour value.
+  #>
   [OutputType([System.Collections.Hashtable])]
   [CmdletBinding()]
   param (

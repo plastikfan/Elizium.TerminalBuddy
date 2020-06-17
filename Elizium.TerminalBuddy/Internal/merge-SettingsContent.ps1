@@ -1,4 +1,4 @@
-function merge-SettingsContent {
+﻿function merge-SettingsContent {
   <#
   .NAME
     merge-SettingsContent
@@ -7,7 +7,15 @@ function merge-SettingsContent {
     combines the new Content just generated with the existing Settings file.
     (used by ConvertFrom-ItermColors)
 
-  .DESCRIPTION
+  .PARAMETER Content
+    The new settings content to merge
+
+  .PARAMETER SettingsPath
+    The path to the settings file
+
+  .PARAMETER OutputPath
+    The path to write result to
+
   #>
 
   param(

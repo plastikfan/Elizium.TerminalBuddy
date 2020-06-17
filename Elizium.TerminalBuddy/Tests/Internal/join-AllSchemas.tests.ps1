@@ -14,7 +14,6 @@ Describe 'join-AllSchemas' {
       }
 
       $jsonSchemes = join-AllSchemas -Schemes $schemes;
-      Write-Host "$result";
 
       $result = $jsonSchemes | ConvertFrom-Json
       $result.schemes | Should -Not -BeNullOrEmpty;
@@ -31,7 +30,6 @@ Describe 'join-AllSchemas' {
       }
 
       $jsonSchemes = join-AllSchemas -Schemes $schemes;
-      Write-Host "$result";
 
       $result = $jsonSchemes | ConvertFrom-Json
       $result.schemes | Should -Not -BeNullOrEmpty;

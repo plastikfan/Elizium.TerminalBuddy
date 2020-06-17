@@ -10,21 +10,22 @@
     This function behaves like a reducer, because it populates an Accumulator
   collection for each file it is presented with.
 
-  .PARAMETER $Underscore
+  .PARAMETER Underscore
     fileinfo object representing the .itermcolors file.
 
-  .PARAMETER $Index
+  .PARAMETER Index
     0 based numeric index specifing the ordinal of the file in the batch.
 
-  .PARAMETER $PassThru
+  .PARAMETER PassThru
     The dictionary object containing additional parameters. Also used by
   this function to append it's result to an 'ACCUMULATOR' hash (indexed
   by scheme name), which ultimately allows all the schemes to be collated
   into the 'schemes' array field in the settings file.
 
-  .PARAMETER $Trigger
+  .PARAMETER Trigger
 
-  .RETURNS
+  .OUTPUTS
+    [PSCustomObject]
     The result of invoking the BODY script block.
   #>
 
