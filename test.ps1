@@ -6,11 +6,6 @@ foreach ($folder in $script:ImportFolders) {
   $source | ForEach-Object { . $_; }
 }
 
-$WindowsTerminalSettingsPath =
-  Resolve-Path -Path '~\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json'
-
-$null = $WindowsTerminalSettingsPath
-
 # $P = 'C:\tools\ColorTool\schemes'
 # $O = '~\dev\Testing\output.terminal-settings.json'
 

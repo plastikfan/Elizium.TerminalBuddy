@@ -116,7 +116,7 @@ function ConvertFrom-ItermColors {
     [string]$ThemeName,
 
     [Parameter(Mandatory = $false)]
-    [string]$LiveSettingsFile = $WindowsTerminalSettingsPath,
+    [string]$LiveSettingsFile = $(get-WindowsTerminalSettingsPath),
 
     [Parameter(Mandatory = $false)]
     [string]$PseudoSettingsFile = '~/Windows.Terminal.pseudo.settings.json'
@@ -179,7 +179,7 @@ function ConvertFrom-ItermColors {
           #
           Copy-Item -Path $(Resolve-Path -Path $LiveSettingsFile) -Destination $BackupFile -WhatIf;
 
-          # This line should be specifying $WindowsTerminalSettingsPath as the OutputPath,
+          # This line should be using get-WindowsTerminalSettingsPath as the OutputPath,
           # but this is being avoided until (if ever) a reliable way of reading and writing
           # JSON comments is found. Until that happens, the recommended user scenario is to use
           # SaveTerminalSettings without the Force switch and then subsquently manually copy the
