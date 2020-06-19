@@ -1,4 +1,10 @@
+
 # Elizium.TerminalBuddy
+
+[![A B](https://img.shields.io/badge/branching-gitflow-informational?style=flat)](https://gitflow.com)
+[![A B](https://img.shields.io/github/license/plastikfan/terminalbuddy)](https://github.com/plastikfan/terminalbuddy/blob/master/LICENSE)
+[![A B](https://img.shields.io/powershellgallery/p/Elizium.TerminalBuddy)](https://www.powershellgallery.com/packages/Elizium.TerminalBuddy)
+
 *Utility module for Windows Terminal.*
 
 The new [Windows Terminal](https://github.com/Microsoft/Terminal) is a great replacement for the tiring and aging console. However, in it's current form, it is not very easy to configure owing to there not being a Settings UI. On top of that, it is not easy to leverage the fine work of others in the creation of [schemes](https://github.com/mbadolato/iTerm2-Color-Schemes) for other console/terminal style applications on other platforms; more specifically, [iterm2](https://iterm2.com/).
