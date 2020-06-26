@@ -27,7 +27,7 @@ stages:
       - task: PowerShell@2
         inputs:
           targetType: 'filePath'
-          filePath: .\bootstrap.ps1
+          filePath: bootstrap.ps1
 - stage: Build
   jobs:
   - job: BuildJob
