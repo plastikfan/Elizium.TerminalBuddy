@@ -19,11 +19,14 @@ stages:
 - stage: Init
   jobs:
   - job: InitJob
+    displayName: JOB -> Installing dependencies (Init)
     steps:
       - script: echo Init!
 - stage: Build
   jobs:
   - job: BuildJob
+    displayName: JOB -> Building TerminalBuddy
     steps:
     - script: echo Building!
+  dependsOn: [Init]
 
