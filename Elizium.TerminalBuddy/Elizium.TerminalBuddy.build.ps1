@@ -1,4 +1,6 @@
 ﻿
+param($Configuration = 'Test')
+
 task . Clean, Build, Tests, Stats
 task Tests ImportCompiledModule, Pester
 task CreateManifest CopyPSD, UpdatePublicFunctionsToExport
@@ -51,6 +53,8 @@ $compileParams = @{
 }
 
 task Compile @compileParams {
+  Write-Host "===> Configuration: '$Configuration'";
+
   if (Test-Path -Path $script:PsmPath) {
     Remove-Item -Path (Resolve-Path $script:PsmPath) -Recurse -Force
   }
@@ -152,7 +156,60 @@ task ApplyFix {
   Invoke-ScriptAnalyzer -Path .\ -Recurse -Fix
 }
 
+# THIS IS DEFUNCT in favour of:
+# https://github.com/stefanstranger/psjwt/blob/master/PSJwt.build.ps1
+#
 task Docs {
   New-ExternalHelp $script:ModuleRoot\docs `
     -OutputPath $script:OutPutFolder\$script:ModuleName\en-GB
 }
+
+task UpdateHelp {
+  if (Test-Path -Path $script:PsdPath) {
+    Import-Module $script:PsdPath -Force
+    Update-MarkdownHelp $script:ModuleRoot\docs 
+    New-ExternalHelp -Path $script:ModuleRoot\docs `
+      -OutputPath $script:OutPutFolder\$script:ModuleName\en-GB -Force
+  }
+  else {
+    Write-Warning 'Skipping task "UpdateHelp", module has not been built yet.'
+  }
+}
+
+task PublishModule -If ($Configuration -eq 'Production') {
+  try {
+    # Build a splat containing the required details and make sure to Stop for errors which will trigger the catch
+    $params = @{ # $script:OutPutFolder\$script:ModuleName
+      Path        = "$script:OutPutFolder\$script:ModuleName"
+      NuGetApiKey = $env:psgallerykey
+      ErrorAction = 'Stop'
+      Repository = 'PSGallery'
+    }
+    Publish-Module @params
+    Write-Output -InputObject ("$script:ModuleName PowerShell Module version published to the PowerShell Gallery")
+  }
+  catch {
+    throw $_
+  }
+}
+
+task PublishModule -If ($Configuration -eq 'Test') {
+  # Need to ensure that TestGallery is a registered to PoshTestGallery.com
+  # This can be put into the bootstrap code
+  #
+  try {
+    # Build a splat containing the required details and make sure to Stop for errors which will trigger the catch
+    $params = @{ # $script:OutPutFolder\$script:ModuleName
+      Path        = "$script:OutPutFolder\$script:ModuleName"
+      NuGetApiKey = $env:poshtestkey
+      ErrorAction = 'Stop'
+      Repository  = 'TestGallery'
+    }
+    Publish-Module @params
+    Write-Output -InputObject ("$script:ModuleName PowerShell Module version published to the Post Test Gallery")
+  }
+  catch {
+    throw $_
+  }
+}
+
