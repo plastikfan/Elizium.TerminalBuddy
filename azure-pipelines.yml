@@ -3,6 +3,8 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
+name: $(Build.DefinitionName)_$(Date:yyyyMMdd))
+
 trigger:
 - master
 
@@ -22,6 +24,10 @@ stages:
     displayName: JOB -> Installing dependencies (Init)
     steps:
       - script: echo Init!
+      - task: PowerShell@2
+        inputs:
+          targetType: 'filePath'
+          filePath: .\bootstrap.ps1
 - stage: Build
   jobs:
   - job: BuildJob
