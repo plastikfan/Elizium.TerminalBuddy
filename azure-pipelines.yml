@@ -23,7 +23,7 @@ stages:
   - job: InitJob
     displayName: JOB -> Installing dependencies (Init)
     steps:
-      - script: echo Init!
+      - script: echo WORKING DIR -> $(System.DefaultWorkingDirectory)
       - task: PowerShell@2
         inputs:
           targetType: 'filePath'
