@@ -16,6 +16,11 @@ variables:
   buildVersion: $(major).$(minor).$(patch)
 
 stages:
+- stage: Init
+  jobs:
+  - job: InitJob
+    steps:
+      - script: echo Init!
 - stage: Build
   jobs:
   - job: BuildJob
