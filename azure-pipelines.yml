@@ -1,0 +1,24 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+name: $(Build.DefinitionName)_$(Date:yyyyMMdd))
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  major: 0
+  minor: 0
+  patch: $(Build.BuildID)
+  buildVersion: $(major).$(minor).$(patch)
+
+steps:
+- powershell: .\bootstrap.ps1
+  displayName: 'Install pre-requisites'
+
+
