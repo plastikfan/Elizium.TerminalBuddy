@@ -3,27 +3,33 @@
 #
 function write-HostItemDecorator {
   <#
-  .NAME
-    write-HostItemDecorator
+  .NAME write-HostItemDecorator
 
   .SYNOPSIS
     Performs iteration over a collection of files which are children of the directory
     specified by the caller.
 
-  .PARAMETER $Underscore
-    The iterated target item provided by the parent iterator function
+  .DESCRIPTION
+    The purpose of this function is a act as a decorator to a custom function on
+  behalf of which any write-host operations are performed. This keeps any
+  display functionality out of that function so that it may be used in scenarios
+  where output is not required.
 
-  .PARAMETER $Index
-    0 based numeric index specifing the ordinal of the iterated target.
+  .PARAMETER Underscore
+    The iterated target item provided by the parent iterator function.
 
-  .PARAMETER $PassThru
+  .PARAMETER Index
+    0 based numeric index specifying the ordinal of the iterated target.
+
+  .PARAMETER PassThru
     The dictionary object used to pass parameters to the decorated scriptblock
-    (enclosed within the PassThru Hashtable)
+    (enclosed within the PassThru Hashtable).
 
-  .PARAMETER $Trigger
+  .PARAMETER Trigger
+    Trigger.
 
-  .RETURNS
-    The resullt of invoking the BODY script block.
+  .OUTPUTS
+    The result of invoking the BODY script block.
   #>
 
   [OutputType([PSCustomObject])]

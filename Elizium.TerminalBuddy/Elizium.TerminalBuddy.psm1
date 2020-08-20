@@ -1,10 +1,6 @@
 
 Set-StrictMode -Version Latest
 
-[string]$WindowsTerminalSettingsPath =
-  Resolve-Path -Path '~\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json'
-$null = $WindowsTerminalSettingsPath;
-
 $functionFolders = @('Public', 'Internal')
 foreach ($folder in $functionFolders)
 {
@@ -24,5 +20,4 @@ foreach ($folder in $functionFolders)
 $publicFunctions = (Get-ChildItem -Path "$PSScriptRoot/Public" -Filter '*.ps1').BaseName
 
 Export-ModuleMember -Function $publicFunctions
-Export-ModuleMember -Variable 'WindowsTerminalSettingsPath'
 Export-ModuleMember -Alias 'cfic', 'Make-WtSchemesIC'

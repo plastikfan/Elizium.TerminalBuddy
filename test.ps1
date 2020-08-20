@@ -1,14 +1,10 @@
 
-. .\Elizium.TerminalBuddy\Internal\get-SortedFilesNatural.ps1
-. .\Elizium.TerminalBuddy\Internal\import-ItermColors.ps1
-. .\Elizium.TerminalBuddy\Internal\invoke-ForeachFile.ps1
-. .\Elizium.TerminalBuddy\Internal\write-HostItemDecorator.ps1
-. .\Elizium.TerminalBuddy\Public\ConvertFrom-ItermColors.ps1
+$script:ImportFolders = @('.\Elizium.TerminalBuddy\Public', '.\Elizium.TerminalBuddy\Internal') 
 
-$WindowsTerminalSettingsPath =
-  Resolve-Path -Path '~\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json'
-
-$null = $WindowsTerminalSettingsPath
+foreach ($folder in $script:ImportFolders) {
+  $source = Get-ChildItem -Path $folder -Recurse -File -Filter '*.ps1';
+  $source | ForEach-Object { . $_; }
+}
 
 # $P = 'C:\tools\ColorTool\schemes'
 # $O = '~\dev\Testing\output.terminal-settings.json'
