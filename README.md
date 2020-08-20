@@ -1,7 +1,8 @@
 
 # Elizium.TerminalBuddy
 
-[![A B](https://img.shields.io/badge/branching-gitflow-informational?style=flat)](https://gitflow.com)
+[![A B](https://img.shields.io/badge/branching-commonflow-informational?style=flat)](https://commonflow.org)
+[![A B](https://img.shields.io/badge/merge-rebase-informational?style=flat)](https://git-scm.com/book/en/v2/Git-Branching-Rebasing)
 [![A B](https://img.shields.io/github/license/plastikfan/terminalbuddy)](https://github.com/plastikfan/terminalbuddy/blob/master/LICENSE)
 [![A B](https://img.shields.io/powershellgallery/p/Elizium.TerminalBuddy)](https://www.powershellgallery.com/packages/Elizium.TerminalBuddy)
 
