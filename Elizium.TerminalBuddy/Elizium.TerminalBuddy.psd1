@@ -51,7 +51,13 @@ PowerShellVersion = '7.0'
 # ProcessorArchitecture = ''
 
 # Modules that must be imported into the global environment prior to importing this module
-RequiredModules = @('Elizium.Krayola')
+  RequiredModules = @(
+    @{
+      ModuleName    = 'Elizium.Krayola';
+      ModuleVersion = '2.0.0';
+      Guid          = 'cc13fedc-6dea-4573-b600-d26c9f77e6ac';
+    }
+  )
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()
